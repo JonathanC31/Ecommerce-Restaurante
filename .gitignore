@@ -1,0 +1,31 @@
+# Spring Boot local secrets
+BackRestaurante/src/main/resources/application.properties
+**/src/main/resources/application.properties
+
+# Keep example config
+!**/src/main/resources/application-example.properties
+
+# Java / Spring Boot
+**/target/
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+
+# Angular / Node
+**/node_modules/
+**/dist/
+**/.angular/
+**/.cache/
+
+# IDEs
+**/.idea/
+**/.vscode/
+**/*.iml
+
+# Logs
+**/*.log
+
+# OS
+.DS_Store
+Thumbs.db
