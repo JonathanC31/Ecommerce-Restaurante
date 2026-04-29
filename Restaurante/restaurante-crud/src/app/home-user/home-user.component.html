@@ -1,0 +1,344 @@
+<p-toolbar>
+    <div class="p-toolbar-group-start">
+        <!-- slide-->
+        <p-sidebar class="sidebar" #sidebarRef [(visible)]="sidebarVisible">
+            <ng-template pTemplate="headless">
+                <div class="flex flex-column h-full gap-2 ">
+                    <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+
+                        <span class="font-semibold text-2xl text-primary">Chow Yinn</span>
+
+                        <span>
+                            <p-button type="button" (onClick)="closeCallback($event)" icon="pi pi-times" rounded="true"
+                                outlined="true" styleClass="h-2rem w-2rem"></p-button>
+                        </span>
+                    </div>
+                    <div class="overflow-y-auto">
+                        <ul class="list-none p-3 m-0">
+                            <li>
+                                <div pRipple pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown"
+                                    leaveToClass="hidden" leaveActiveClass="slideup"
+                                    class="p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple">
+                                    <span class="font-medium">MENU</span>
+                                    <i class="pi pi-chevron-down"></i>
+                                </div>
+                                <ul class="list-none p-0 m-0 overflow-hidden">
+                                    <li>
+                                        <a pRipple href="home-user#Valenciano"
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-star-fill mr-2"></i>
+                                            <span class="font-medium">Valenciano</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple href="home-user#TodaslasCarnes"
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">Todas las Carnes</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple href="home-user#Paisa"
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">Paisa</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">Pollo</span>
+                                            <span
+                                                class="inline-flex align-items-center justify-content-center ml-auto bg-primary border-circle"
+                                                style="min-width: 1.5rem; height: 1.5rem">3</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">gaseosa</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">addiciones</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="list-none p-3 m-0">
+                            <li>
+                                <div pRipple pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown"
+                                    leaveToClass="hidden" leaveActiveClass="slideup"
+                                    class="p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple">
+                                    <span class="font-medium">ESPECIALES</span>
+                                    <i class="pi pi-chevron-down"></i>
+                                </div>
+                                <ul class="list-none p-0 m-0 overflow-hidden">
+                                    <li>
+                                        <a pRipple
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-star-fill mr-2"></i>
+                                            <span class="font-medium">Chop suey</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">Espagguetti</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a pRipple
+                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                            <i class="pi pi-minus mr-2"></i>
+                                            <span class="font-medium">Tortilla</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </ng-template>
+        </p-sidebar>
+        <p-button (onClick)="sidebarVisible = true" icon="pi pi-bars" label="Menu">
+        </p-button>
+        <!-- Slide-->
+        <p-button *ngIf="!authService.isAuthenticated()" label="Sesión" icon="pi pi-user" routerLink="/login">
+        </p-button>
+
+        <p-button *ngIf="authService.isAuthenticated()" label="Cerrar sesión" icon="pi pi-sign-out"
+            (onClick)="logout()">
+        </p-button>
+
+    </div>
+
+    <div class="card flex justify-content-center" [formGroup]="productFormGroup">
+        <p-autoComplete formControlName="producto" [dropdown]="true" [showClear]="true"
+            [suggestions]="filteredProductos" (completeMethod)="filterProducto($event)"
+            (onSelect)="onSelectProducto($event)" optionLabel="nombre" placeholder="Buscar productos"></p-autoComplete>
+    </div>
+
+    <div class="p-toolbar-group-end">
+
+        <p-button label="Cart" icon="pi pi-shopping-cart" (onClick)="cartVisible = true" styleClass="p-button-rounded">
+        </p-button>
+
+        <p-sidebar [(visible)]="cartVisible" position="right">
+            <!-- Header del Sidebar -->
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h3>Tu Carrito</h3>
+            </div>
+
+            <!-- Contenido del carrito -->
+            <div *ngIf="carrito.length > 0; else emptyCart">
+                <div *ngFor="let item of carrito" class="p-mb-3">
+                    <div class="p-d-flex p-ai-center">
+                        <!-- Imagen del producto -->
+                        <img src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                            alt="{{ item.producto.nombre }}" class="cart-img"
+                            style="width: max-content; height: 80px; object-fit: cover;" />
+
+                        <!-- Información del producto -->
+                        <div class="p-ml-3">
+                            <h4>{{ item.producto.nombre }}</h4>
+                            <p>Stock disponible: {{ item.producto.stock }}</p>
+                            <p>Cantidad:
+                                <p-inputNumber [(ngModel)]="item.cantidad" [min]="1" [max]="item.producto.stock"
+                                    [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+                                    decrementButtonIcon="pi pi-minus" styleClass="p-inputnumber-sm"
+                                    inputStyleClass="w-3rem text-center py-2 px-1" (onInput)="calculateTotal()"
+                                    (onBlur)="calculateTotal()">
+                                </p-inputNumber>
+                            </p>
+                            <p>Precio Total: ${{ item.producto.precioUnitario * item.cantidad }}</p>
+                        </div>
+
+                        <!-- Botón de eliminar -->
+                        <p-button pripple icon="pi pi-trash" severity="danger" class="p-button-rounded p-ml-auto"
+                            (onClick)="removeFromCart(item)">
+                        </p-button>
+
+                        <p>
+
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Resumen y acciones (------------error al calcular el precio-------------)-->
+                <p-divider></p-divider>
+                <h4>Total: ${{ totalAmount }}</h4>
+                <p-button label="Checkout" class="p-button-success p-mt-3 w-full" (onClick)="checkout()">
+                </p-button>
+            </div>
+
+            <!-- Carrito vacío -->
+            <ng-template #emptyCart>
+                <div class="p-text-center">
+                    <p>Su carrito esta vacio</p>
+                </div>
+            </ng-template>
+        </p-sidebar>
+
+    </div>
+
+</p-toolbar>
+
+<!--que el carrusel dirija a la seccion con el producto-->
+<p-carousel class="carrusel" [value]="productos" [numVisible]="3" [numScroll]="3" [circular]="true"
+    [responsiveOptions]="responsiveOptions" autoplayInterval="6000">
+    <ng-template let-producto pTemplate="item">
+        <div class="border-1 surface-border border-round m-2 p-3">
+            <div class="mb-3">
+                <div class="relative mx-auto">
+                    <img src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" [alt]="producto.nombre"
+                        class="w-full border-round" />
+                    <p-tag [value]="producto.stock" class="absolute" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+                </div>
+            </div>
+            <div class="mb-3 font-medium">
+                {{ producto.nombre }}
+            </div>
+            <div class="flex justify-content-between align-items-center">
+                <div class="mt-0 font-semibold text-xl">
+                    {{ '$' + producto.precioUnitario}}
+                </div>
+                <span>
+                    <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
+                    <p-button icon="pi pi-cart-arrow-down" styleClass="ml-2" (onClick)="addToCart(producto)" />
+                </span>
+            </div>
+        </div>
+    </ng-template>
+</p-carousel>
+
+<!-- Diálogo para mostrar detalles del producto -->
+<p-dialog header="Detalles del Producto" [(visible)]="isDialogVisible" [dismissableMask]="true"
+    [style]="{ width: '50vw' }" [closable]="true" class="custom-dialog">
+    <ng-container *ngIf="selectedProducto">
+        <div class="grid">
+            <div class="col-12 lg:col-6 text-center">
+                <img src='https://primefaces.org/cdn/primeng/images/card-ng.jpg' class="w-8rem sm:w-15rem lg:w-20rem" />
+            </div>
+            <div class="col-12 lg:col-6">
+                <h2>{{ selectedProducto.nombre }}</h2>
+                <p>Categoría: {{ selectedProducto.categoria }}</p>
+                <p>Precio: {{ selectedProducto.precioUnitario }}$</p>
+                <p>Stock disponible: {{ selectedProducto.stock }}</p>
+                <p class="mt-2">Sin descripción disponible.</p>
+                <p-button icon="pi pi-arrow-left" (onClick)="isDialogVisible = false" class="ml-2"
+                    severity="danger"></p-button>
+                <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(selectedProducto)"
+                    class="ml-2"></p-button>
+            </div>
+        </div>
+    </ng-container>
+</p-dialog>
+
+<p-fieldset legend="Valenciano" id="Valenciano">
+    <p class="m-0">
+        Arroz chino sencillo con pollo (asado o broaster)
+    </p>
+    <p>
+
+    </p>
+    <div class="card" class="flex flex-column gap-2">
+        <div class="flex gap-4 flex-wrap">
+            @for (producto of productos; track producto.id) {
+            <p-card *ngIf="producto.categoria === 'canasta'" header="{{ producto.nombre }}"
+                subheader="{{ producto.categoria }}" [style]="{ width: '360px' }">
+                <ng-template pTemplate="header">
+                    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+                </ng-template>
+                <p>Stock : {{ producto.stock }}</p>
+                <p>Precio : {{ producto.precioUnitario }}$</p>
+                <ng-template pTemplate="footer">
+                    <div class="flex gap-3 mt-1">
+                        <p-button label="Ver más" icon="pi pi-eye" (onClick)="openDialog(producto) "></p-button>
+                        <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(producto)">
+                        </p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+            }@empty {
+            <p>No existen productos</p>
+            }
+        </div>
+    </div>
+</p-fieldset>
+<p>
+
+</p>
+<p-fieldset legend="Todas las Carnes" id="TodaslasCarnes">
+    <p class="m-0">
+        Arroz chino con todas las carnes (Res Cerdo pollo jamon)
+    </p>
+    <p>
+
+    </p>
+    <div class="card" class="flex flex-column gap-2">
+        <div class="flex gap-4 flex-wrap">
+            @for (producto of productos; track producto.id) {
+            <p-card *ngIf="producto.categoria === 'Lacteo'" header="{{ producto.nombre }}"
+                subheader="{{ producto.categoria }}" [style]="{ width: '360px' }">
+                <ng-template pTemplate="header">
+                    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+                </ng-template>
+                <p>Stock : {{ producto.stock }}</p>
+                <p>Precio : {{ producto.precioUnitario }}$</p>
+                <ng-template pTemplate="footer">
+                    <div class="flex gap-3 mt-1">
+                        <p-button label="Ver más" icon="pi pi-eye" (onClick)="openDialog(producto)"></p-button>
+                        <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(producto)">
+                        </p-button>
+
+                    </div>
+                </ng-template>
+            </p-card>
+            }@empty {
+            <p>No existen productos</p>
+            }
+        </div>
+    </div>
+</p-fieldset>
+<p>
+
+</p>
+<p-fieldset legend="Paisa" id="Paisa">
+    <p class="m-0">
+        Arroz chino con todas las carnes (Res Cerdo pollo jamon)
+    </p>
+    <p>
+
+    </p>
+    <div class="card" class="flex flex-column gap-2">
+        <div class="flex gap-4 flex-wrap">
+            @for (producto of productos; track producto.id) {
+            <p-card *ngIf="producto.categoria === 'Lacteo'" header="{{ producto.nombre }}"
+                subheader="{{ producto.categoria }}" [style]="{ width: '360px' }">
+                <ng-template pTemplate="header">
+                    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+                </ng-template>
+                <p>Stock : {{ producto.stock }}</p>
+                <p>Precio : {{ producto.precioUnitario }}$</p>
+                <ng-template pTemplate="footer">
+                    <div class="flex gap-3 mt-1">
+                        <p-button label="Ver más" icon="pi pi-eye" (onClick)="openDialog(producto)"></p-button>
+                        <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(producto)">
+                        </p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+            }@empty {
+            <p>No existen productos</p>
+            }
+        </div>
+    </div>
+</p-fieldset>

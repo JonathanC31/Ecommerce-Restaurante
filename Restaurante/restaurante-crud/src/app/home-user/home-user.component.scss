@@ -1,0 +1,18 @@
+::ng-deep .custom-dialog .p-dialog-mask {
+    background: rgba(0, 0, 0, 0.5) !important; /* Fondo oscuro y transparente */
+}
+
+::ng-deep .custom-dialog .p-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .custom-dialog .p-dialog-content {
+    padding: 1.5rem;
+}
+
+::ng-deep .custom-dialog .p-dialog-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+}

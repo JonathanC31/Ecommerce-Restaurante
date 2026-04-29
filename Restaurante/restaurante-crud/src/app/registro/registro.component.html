@@ -1,0 +1,74 @@
+<p-toast></p-toast>
+
+<div class="flex justify-content-center align-items-center min-h-screen w-full">
+  <p-card header="Registro de Usuario" class="w-10">
+
+    <form [formGroup]="formUser" (ngSubmit)="onSubmit()" class="flex flex-column gap-2">
+
+      <div class="field flex flex-column gap-1">
+        <label for="login">Username</label>
+        <input type="text" pInputText id="login" formControlName="login" />
+        <div *ngIf="formUser.get('login')?.invalid && formUser.get('login')?.touched">
+          <small class="error">Username es requerido.</small>
+        </div>
+      </div>
+
+      <div class="field flex flex-column gap-1">
+        <label for="password">Password</label>
+        <input type="password" pInputText id="password" formControlName="password" />
+        <div *ngIf="formUser.get('password')?.invalid && formUser.get('password')?.touched">
+          <small class="error">Password es requerido.</small>
+        </div>
+      </div>
+
+      <div class="field flex flex-column gap-1">
+        <label for="name">Nombre</label>
+        <input type="text" pInputText id="name" formControlName="name" />
+        <div *ngIf="formUser.get('name')?.invalid && formUser.get('name')?.touched">
+          <small class="error">Nombre es requerido.</small>
+        </div>
+      </div>
+
+      <div class="field flex flex-column gap-1">
+        <label for="email">Email</label>
+        <input type="email" pInputText id="email" formControlName="email" />
+        <div *ngIf="formUser.get('email')?.invalid && formUser.get('email')?.touched">
+          <small class="error">Email válido es requerido.</small>
+        </div>
+      </div>
+
+      <div class="field flex flex-column gap-1">
+        <label for="phoneNumber">Teléfono</label>
+        <input type="text" pInputText id="phoneNumber" formControlName="phoneNumber" />
+        <div *ngIf="formUser.get('phoneNumber')?.invalid && formUser.get('phoneNumber')?.touched">
+          <small class="error">Teléfono es requerido.</small>
+        </div>
+      </div>
+
+      <div class="field flex flex-column gap-1">
+        <label for="address">Dirección</label>
+        <input type="text" pInputText id="address" formControlName="address" />
+        <div *ngIf="formUser.get('address')?.invalid && formUser.get('address')?.touched">
+          <small class="error">Dirección es requerida.</small>
+        </div>
+      </div>
+
+      <div class="flex gap-2 mt-3">
+        <p-button
+          label="Guardar"
+          type="submit"
+          [loading]="isSaveInProgress">
+        </p-button>
+
+        <p-button
+          label="Volver"
+          type="button"
+          severity="secondary"
+          routerLink="/login">
+        </p-button>
+      </div>
+
+    </form>
+  </p-card>
+</div>
+  

@@ -1,0 +1,68 @@
+<p-toast></p-toast>
+
+<div class="flex flex-column gap-2">
+
+  <div class="flex gap-2">
+    <p-button
+      label="Crear producto"
+      routerLink="/producto-form/new"
+      class="font-bold ml-2">
+    </p-button>
+
+    <p-button
+      icon="pi pi-sign-out"
+      label="Cerrar sesión"
+      (onClick)="logout()"
+      class="font-bold ml-2">
+    </p-button>
+
+    <p-button
+      icon="pi pi-book"
+      label="Reportes"
+      routerLink="/reportes"
+      class="font-bold ml-2">
+    </p-button>
+  </div>
+
+  <div class="flex gap-4 flex-wrap">
+
+    @for (producto of productos; track producto.id) {
+      <p-card
+        header="{{ producto.nombre }}"
+        subheader="{{ producto.categoria }}"
+        [style]="{ width: '360px' }">
+
+        <ng-template pTemplate="header">
+          <img
+            alt="Card"
+            src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+        </ng-template>
+
+        <p>Stock : {{ producto.stock }}</p>
+        <p>Precio : {{ producto.precioUnitario }}$</p>
+
+        <ng-template pTemplate="footer">
+          <div class="flex gap-3 mt-1">
+
+            <p-button
+              (onClick)="deleteProducto(producto.id!)"
+              label="Borrar"
+              severity="secondary">
+            </p-button>
+
+            <p-button
+              label="Editar"
+              routerLink="/producto-form/{{ producto.id }}"
+              class="font-bold ml-2">
+            </p-button>
+
+          </div>
+        </ng-template>
+
+      </p-card>
+    } @empty {
+      <p>No existen productos</p>
+    }
+
+  </div>
+</div>

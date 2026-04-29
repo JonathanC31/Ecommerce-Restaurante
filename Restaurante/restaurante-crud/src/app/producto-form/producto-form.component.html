@@ -1,0 +1,29 @@
+<div class="flex justify-content-center align-items-center min-h-screen w-full">
+    <p-card header="Formulario producto" class="w-10">
+        <form [formGroup]="formProducto" (ngSubmit)="edit ? updateProducto() : createProducto()" class="flex flex-column gap-2">
+            <div class="field flex flex-column gap-1">
+                <label for="nombre">Nombre producto</label>
+                <input type="text" pInputText formControlName="nombre" />
+                <div *ngIf="formProducto.get('nombre')?.invalid && formProducto.get('nombre')?.touched">
+                    <small class="error">Nombre es requerido.</small>
+                </div>
+            </div>
+            <div class="field flex flex-column gap-1">
+                <label for="categoria">Categoria</label>
+                <input type="text" pInputText formControlName="categoria" />
+            </div>
+            <div class="field flex flex-column gap-1">
+                <label for="precio">Precio unidad</label>
+                <p-inputNumber inputId="integeronly" formControlName="precioUnitario"></p-inputNumber>
+            </div>
+            <div class="field flex flex-column gap-1">
+                <label for="stock">Stock</label>
+                <p-inputNumber inputId="integeronly" formControlName="stock"></p-inputNumber>
+            </div>
+            <div class="flex gap-2">
+                <p-button label="Guardar" [loading]="isSaveInProgress" type="submit"></p-button>
+            </div>
+        </form>
+    </p-card>
+</div>
+
