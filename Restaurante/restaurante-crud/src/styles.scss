@@ -2,3 +2,27 @@
 @import "primeicons/primeicons.css";
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+
+/* Scrollbar global */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #9e1b1b #fff8f0;
+}
+
+body::-webkit-scrollbar {
+  width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #fff8f0;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #9e1b1b;
+  border-radius: 999px;
+  border: 3px solid #fff8f0;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #6f1212;
+}

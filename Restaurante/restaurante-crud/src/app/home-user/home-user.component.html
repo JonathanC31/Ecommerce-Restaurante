@@ -1,344 +1,567 @@
-<p-toolbar>
-    <div class="p-toolbar-group-start">
-        <!-- slide-->
-        <p-sidebar class="sidebar" #sidebarRef [(visible)]="sidebarVisible">
-            <ng-template pTemplate="headless">
-                <div class="flex flex-column h-full gap-2 ">
-                    <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+<p-toast></p-toast>
 
-                        <span class="font-semibold text-2xl text-primary">Chow Yinn</span>
+<!-- Toolbar fijo -->
+<div class="sticky-toolbar">
+    <div class="chow-toolbar-custom">
 
-                        <span>
-                            <p-button type="button" (onClick)="closeCallback($event)" icon="pi pi-times" rounded="true"
-                                outlined="true" styleClass="h-2rem w-2rem"></p-button>
-                        </span>
-                    </div>
-                    <div class="overflow-y-auto">
-                        <ul class="list-none p-3 m-0">
-                            <li>
-                                <div pRipple pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown"
-                                    leaveToClass="hidden" leaveActiveClass="slideup"
-                                    class="p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple">
-                                    <span class="font-medium">MENU</span>
-                                    <i class="pi pi-chevron-down"></i>
-                                </div>
-                                <ul class="list-none p-0 m-0 overflow-hidden">
-                                    <li>
-                                        <a pRipple href="home-user#Valenciano"
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-star-fill mr-2"></i>
-                                            <span class="font-medium">Valenciano</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple href="home-user#TodaslasCarnes"
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">Todas las Carnes</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple href="home-user#Paisa"
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">Paisa</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">Pollo</span>
-                                            <span
-                                                class="inline-flex align-items-center justify-content-center ml-auto bg-primary border-circle"
-                                                style="min-width: 1.5rem; height: 1.5rem">3</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">gaseosa</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">addiciones</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="list-none p-3 m-0">
-                            <li>
-                                <div pRipple pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown"
-                                    leaveToClass="hidden" leaveActiveClass="slideup"
-                                    class="p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple">
-                                    <span class="font-medium">ESPECIALES</span>
-                                    <i class="pi pi-chevron-down"></i>
-                                </div>
-                                <ul class="list-none p-0 m-0 overflow-hidden">
-                                    <li>
-                                        <a pRipple
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-star-fill mr-2"></i>
-                                            <span class="font-medium">Chop suey</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">Espagguetti</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a pRipple
-                                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                            <i class="pi pi-minus mr-2"></i>
-                                            <span class="font-medium">Tortilla</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+        <div class="toolbar-actions-left">
+            <p-button
+                (onClick)="sidebarVisible = true"
+                icon="pi pi-bars"
+                label="Menú"
+                styleClass="toolbar-button toolbar-menu-button">
+            </p-button>
+
+            <p-button
+                *ngIf="!authService.isAuthenticated()"
+                label="Sesión"
+                icon="pi pi-user"
+                routerLink="/login"
+                styleClass="toolbar-button toolbar-session-button">
+            </p-button>
+
+            <p-button
+                *ngIf="authService.isAuthenticated()"
+                label="Cerrar sesión"
+                icon="pi pi-sign-out"
+                (onClick)="logout()"
+                styleClass="toolbar-button toolbar-session-button">
+            </p-button>
+        </div>
+
+        <div class="toolbar-search" [formGroup]="productFormGroup">
+            <p-autoComplete
+                formControlName="producto"
+                [dropdown]="true"
+                [showClear]="true"
+                [suggestions]="filteredProductos"
+                (completeMethod)="filterProducto($event)"
+                (onSelect)="onSelectProducto($event)"
+                optionLabel="nombre"
+                placeholder="Buscar productos">
+            </p-autoComplete>
+        </div>
+
+    </div>
+</div>
+
+<!-- Hero principal -->
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="eyebrow">CHOW YINN · RESTAURANTE CHINO</p>
+
+        <h1>Sabores calientes, frescos y listos para compartir</h1>
+
+        <p class="hero-description">
+            Disfruta arroz chino, carnes, pollo, especiales y bebidas en una experiencia rápida,
+            sencilla y pensada para pedir sin complicaciones.
+        </p>
+
+        <div class="hero-actions">
+            <p-button
+                label="Ver menú"
+                icon="pi pi-list"
+                styleClass="primary-action"
+                (onClick)="sidebarVisible = true">
+            </p-button>
+
+            <p-button
+                label="Ordenar ahora"
+                icon="pi pi-shopping-cart"
+                styleClass="secondary-action"
+                (onClick)="cartVisible = true">
+            </p-button>
+        </div>
+    </div>
+
+    <div class="hero-card">
+        <img
+            src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=900&q=80"
+            alt="Comida china servida en mesa" />
+
+        <div class="hero-badge">
+            <span>Especial del día</span>
+            <strong>Arroz chino familiar</strong>
+        </div>
+    </div>
+</section>
+
+<!-- Favoritos de la casa -->
+<section class="highlights-section">
+    <div class="section-heading">
+        <p class="eyebrow">DESTACADOS</p>
+        <h2>Favoritos de la casa</h2>
+        <p>
+            Platos recomendados para empezar tu pedido. Elige, agrega al carrito y finaliza tu compra.
+        </p>
+    </div>
+
+    <p-carousel
+        class="highlights-carousel"
+        [value]="productos"
+        [numVisible]="3"
+        [numScroll]="1"
+        [circular]="true"
+        [responsiveOptions]="responsiveOptions"
+        autoplayInterval="6000">
+
+        <ng-template let-producto pTemplate="item">
+            <article class="highlight-card">
+                <div class="highlight-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80"
+                        [alt]="producto.nombre" />
+
+                    <span class="stock-pill">
+                        Stock {{ producto.stock }}
+                    </span>
+                </div>
+
+                <div class="highlight-body">
+                    <span class="category-pill">
+                        {{ producto.categoria }}
+                    </span>
+
+                    <h3>{{ producto.nombre }}</h3>
+
+                    <p class="highlight-description">
+                        Plato preparado al momento, ideal para compartir o acompañar tu pedido.
+                    </p>
+
+                    <div class="highlight-footer">
+                        <strong>
+                            {{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}
+                        </strong>
+
+                        <div class="highlight-actions">
+                            <p-button
+                                icon="pi pi-eye"
+                                [rounded]="true"
+                                styleClass="view-action"
+                                (onClick)="openDialog(producto)">
+                            </p-button>
+
+                            <p-button
+                                icon="pi pi-cart-plus"
+                                [rounded]="true"
+                                styleClass="cart-action"
+                                (onClick)="addToCart(producto)">
+                            </p-button>
+                        </div>
                     </div>
                 </div>
-            </ng-template>
-        </p-sidebar>
-        <p-button (onClick)="sidebarVisible = true" icon="pi pi-bars" label="Menu">
-        </p-button>
-        <!-- Slide-->
-        <p-button *ngIf="!authService.isAuthenticated()" label="Sesión" icon="pi pi-user" routerLink="/login">
-        </p-button>
+            </article>
+        </ng-template>
+    </p-carousel>
+</section>
 
-        <p-button *ngIf="authService.isAuthenticated()" label="Cerrar sesión" icon="pi pi-sign-out"
-            (onClick)="logout()">
-        </p-button>
+<!-- Template reutilizable para productos del menú -->
+<ng-template #menuProductCard let-producto="producto">
+    <article class="menu-product-card">
+        <div class="menu-product-image">
+            <img
+                src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                [alt]="producto.nombre" />
 
-    </div>
+            <span class="menu-stock-pill">
+                Stock {{ producto.stock }}
+            </span>
+        </div>
 
-    <div class="card flex justify-content-center" [formGroup]="productFormGroup">
-        <p-autoComplete formControlName="producto" [dropdown]="true" [showClear]="true"
-            [suggestions]="filteredProductos" (completeMethod)="filterProducto($event)"
-            (onSelect)="onSelectProducto($event)" optionLabel="nombre" placeholder="Buscar productos"></p-autoComplete>
-    </div>
+        <div class="menu-product-body">
+            <span class="category-pill">
+                {{ producto.categoria }}
+            </span>
 
-    <div class="p-toolbar-group-end">
+            <h3>{{ producto.nombre }}</h3>
 
-        <p-button label="Cart" icon="pi pi-shopping-cart" (onClick)="cartVisible = true" styleClass="p-button-rounded">
-        </p-button>
+            <p class="menu-product-description">
+                Producto disponible para agregar a tu pedido.
+            </p>
 
-        <p-sidebar [(visible)]="cartVisible" position="right">
-            <!-- Header del Sidebar -->
-            <div class="p-d-flex p-ai-center p-jc-between">
-                <h3>Tu Carrito</h3>
+            <div class="menu-product-info">
+                <div>
+                    <span>Precio</span>
+                    <strong>{{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</strong>
+                </div>
+
+                <div>
+                    <span>Disponible</span>
+                    <strong>{{ producto.stock }}</strong>
+                </div>
             </div>
 
-            <!-- Contenido del carrito -->
-            <div *ngIf="carrito.length > 0; else emptyCart">
-                <div *ngFor="let item of carrito" class="p-mb-3">
-                    <div class="p-d-flex p-ai-center">
-                        <!-- Imagen del producto -->
-                        <img src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
-                            alt="{{ item.producto.nombre }}" class="cart-img"
-                            style="width: max-content; height: 80px; object-fit: cover;" />
+            <div class="menu-product-actions">
+                <p-button
+                    label="Ver más"
+                    icon="pi pi-eye"
+                    styleClass="menu-view-button"
+                    (onClick)="openDialog(producto)">
+                </p-button>
 
-                        <!-- Información del producto -->
-                        <div class="p-ml-3">
-                            <h4>{{ item.producto.nombre }}</h4>
-                            <p>Stock disponible: {{ item.producto.stock }}</p>
-                            <p>Cantidad:
-                                <p-inputNumber [(ngModel)]="item.cantidad" [min]="1" [max]="item.producto.stock"
-                                    [showButtons]="true" buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
-                                    decrementButtonIcon="pi pi-minus" styleClass="p-inputnumber-sm"
-                                    inputStyleClass="w-3rem text-center py-2 px-1" (onInput)="calculateTotal()"
-                                    (onBlur)="calculateTotal()">
-                                </p-inputNumber>
-                            </p>
-                            <p>Precio Total: ${{ item.producto.precioUnitario * item.cantidad }}</p>
-                        </div>
-
-                        <!-- Botón de eliminar -->
-                        <p-button pripple icon="pi pi-trash" severity="danger" class="p-button-rounded p-ml-auto"
-                            (onClick)="removeFromCart(item)">
-                        </p-button>
-
-                        <p>
-
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Resumen y acciones (------------error al calcular el precio-------------)-->
-                <p-divider></p-divider>
-                <h4>Total: ${{ totalAmount }}</h4>
-                <p-button label="Checkout" class="p-button-success p-mt-3 w-full" (onClick)="checkout()">
+                <p-button
+                    label="Añadir"
+                    icon="pi pi-cart-plus"
+                    styleClass="menu-add-button"
+                    (onClick)="addToCart(producto)">
                 </p-button>
             </div>
+        </div>
+    </article>
+</ng-template>
 
-            <!-- Carrito vacío -->
-            <ng-template #emptyCart>
-                <div class="p-text-center">
-                    <p>Su carrito esta vacio</p>
-                </div>
-            </ng-template>
-        </p-sidebar>
-
+<!-- Menú por categorías -->
+<section class="menu-section">
+    <div class="section-heading">
+        <p class="eyebrow">MENÚ</p>
+        <h2>Elige tu plato</h2>
+        <p>
+            Explora las categorías principales y arma tu pedido desde el menú.
+        </p>
     </div>
 
-</p-toolbar>
+    @for (categoria of categoriasMenu; track categoria.id) {
+        <p-fieldset
+            [legend]="categoria.titulo"
+            [attr.id]="categoria.id">
 
-<!--que el carrusel dirija a la seccion con el producto-->
-<p-carousel class="carrusel" [value]="productos" [numVisible]="3" [numScroll]="3" [circular]="true"
-    [responsiveOptions]="responsiveOptions" autoplayInterval="6000">
-    <ng-template let-producto pTemplate="item">
-        <div class="border-1 surface-border border-round m-2 p-3">
-            <div class="mb-3">
-                <div class="relative mx-auto">
-                    <img src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" [alt]="producto.nombre"
-                        class="w-full border-round" />
-                    <p-tag [value]="producto.stock" class="absolute" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
-                </div>
+            <p class="menu-category-description">
+                {{ categoria.descripcion }}
+            </p>
+
+            <div class="menu-grid">
+                @for (producto of productosPorCategoria(categoria.categoriaProducto); track producto.id) {
+                    <ng-container
+                        *ngTemplateOutlet="menuProductCard; context: { producto: producto }">
+                    </ng-container>
+                } @empty {
+                    <div class="empty-category">
+                        <i class="pi pi-info-circle"></i>
+                        <p>No hay productos disponibles en esta categoría.</p>
+                    </div>
+                }
             </div>
-            <div class="mb-3 font-medium">
-                {{ producto.nombre }}
-            </div>
-            <div class="flex justify-content-between align-items-center">
-                <div class="mt-0 font-semibold text-xl">
-                    {{ '$' + producto.precioUnitario}}
-                </div>
+        </p-fieldset>
+    }
+</section>
+
+<!-- Botón flotante del carrito -->
+<button
+    type="button"
+    class="floating-cart-button"
+    (click)="cartVisible = true"
+    aria-label="Abrir carrito">
+    <i class="pi pi-shopping-cart"></i>
+
+    <span *ngIf="getCantidadTotalCarrito() > 0" class="floating-cart-badge">
+        {{ getCantidadTotalCarrito() }}
+    </span>
+</button>
+
+<!-- Sidebar menú -->
+<p-sidebar
+    class="sidebar"
+    #sidebarRef
+    [(visible)]="sidebarVisible"
+    [modal]="true"
+    [baseZIndex]="10000"
+    styleClass="menu-sidebar">
+
+    <ng-template pTemplate="headless">
+        <div class="flex flex-column h-full gap-2">
+            <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+                <span class="sidebar-brand">Chow Yinn</span>
+
                 <span>
-                    <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
-                    <p-button icon="pi pi-cart-arrow-down" styleClass="ml-2" (onClick)="addToCart(producto)" />
+                    <p-button
+                        type="button"
+                        (onClick)="closeCallback($event)"
+                        icon="pi pi-times"
+                        rounded="true"
+                        outlined="true"
+                        styleClass="h-2rem w-2rem">
+                    </p-button>
                 </span>
+            </div>
+
+            <div class="overflow-y-auto">
+                <ul class="list-none p-3 m-0">
+                    <li>
+                        <div
+                            pRipple
+                            pStyleClass="@next"
+                            enterClass="hidden"
+                            enterActiveClass="slidedown"
+                            leaveToClass="hidden"
+                            leaveActiveClass="slideup"
+                            class="p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple">
+                            <span class="font-medium">MENÚ</span>
+                            <i class="pi pi-chevron-down"></i>
+                        </div>
+
+                        <ul class="list-none p-0 m-0 overflow-hidden">
+                            @for (categoria of categoriasMenu; track categoria.id) {
+                                <li>
+                                    <a
+                                        pRipple
+                                        href="home-user#{{ categoria.id }}"
+                                        (click)="sidebarVisible = false"
+                                        class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                        <i class="pi pi-minus mr-2"></i>
+                                        <span class="font-medium">{{ categoria.titulo }}</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="list-none p-3 m-0">
+                    <li>
+                        <div
+                            pRipple
+                            pStyleClass="@next"
+                            enterClass="hidden"
+                            enterActiveClass="slidedown"
+                            leaveToClass="hidden"
+                            leaveActiveClass="slideup"
+                            class="p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple">
+                            <span class="font-medium">ESPECIALES</span>
+                            <i class="pi pi-chevron-down"></i>
+                        </div>
+
+                        <ul class="list-none p-0 m-0 overflow-hidden">
+                            <li>
+                                <a
+                                    pRipple
+                                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                    <i class="pi pi-star-fill mr-2"></i>
+                                    <span class="font-medium">Chop Suey</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    pRipple
+                                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                    <i class="pi pi-minus mr-2"></i>
+                                    <span class="font-medium">Espagueti chino</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    pRipple
+                                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                    <i class="pi pi-minus mr-2"></i>
+                                    <span class="font-medium">Tortilla china</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </ng-template>
-</p-carousel>
+</p-sidebar>
 
-<!-- Diálogo para mostrar detalles del producto -->
-<p-dialog header="Detalles del Producto" [(visible)]="isDialogVisible" [dismissableMask]="true"
-    [style]="{ width: '50vw' }" [closable]="true" class="custom-dialog">
+<!-- Sidebar carrito -->
+<p-sidebar
+    [(visible)]="cartVisible"
+    position="right"
+    [modal]="true"
+    [baseZIndex]="10000"
+    styleClass="cart-sidebar">
+
+    <div class="cart-header">
+        <h3>Tu carrito</h3>
+        <p>Revisa tu pedido antes de pagar.</p>
+    </div>
+
+    <div *ngIf="carrito.length > 0; else emptyCart">
+        <div *ngFor="let item of carrito" class="cart-item">
+            <img
+                src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                alt="{{ item.producto.nombre }}"
+                class="cart-img" />
+
+            <div class="cart-info">
+                <h4>{{ item.producto.nombre }}</h4>
+                <p>Stock disponible: {{ item.producto.stock }}</p>
+
+                <div class="cart-quantity">
+                    <span>Cantidad:</span>
+
+                    <p-inputNumber
+                        [(ngModel)]="item.cantidad"
+                        [min]="1"
+                        [max]="item.producto.stock"
+                        [showButtons]="true"
+                        buttonLayout="horizontal"
+                        incrementButtonIcon="pi pi-plus"
+                        decrementButtonIcon="pi pi-minus"
+                        styleClass="p-inputnumber-sm"
+                        inputStyleClass="w-3rem text-center py-2 px-1"
+                        (onInput)="calculateTotal()"
+                        (onBlur)="calculateTotal()">
+                    </p-inputNumber>
+                </div>
+
+                <p class="cart-price">
+                    {{ item.producto.precioUnitario * item.cantidad | currency:'COP':'symbol':'1.0-0' }}
+                </p>
+            </div>
+
+            <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                styleClass="cart-remove-button"
+                (onClick)="removeFromCart(item)">
+            </p-button>
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="cart-total">
+            <span>Total</span>
+            <strong>{{ totalAmount | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+
+        <p-button
+            label="Pagar pedido"
+            icon="pi pi-credit-card"
+            styleClass="checkout-button w-full mt-3"
+            (onClick)="checkout()">
+        </p-button>
+    </div>
+
+    <ng-template #emptyCart>
+        <div class="empty-cart">
+            <i class="pi pi-shopping-cart"></i>
+            <p>Su carrito está vacío</p>
+        </div>
+    </ng-template>
+</p-sidebar>
+
+<!-- Diálogo detalle de producto -->
+<p-dialog
+    header="Detalles del producto"
+    [(visible)]="isDialogVisible"
+    [dismissableMask]="true"
+    [style]="{ width: '50vw' }"
+    [closable]="true"
+    class="custom-dialog">
+
     <ng-container *ngIf="selectedProducto">
         <div class="grid">
             <div class="col-12 lg:col-6 text-center">
-                <img src='https://primefaces.org/cdn/primeng/images/card-ng.jpg' class="w-8rem sm:w-15rem lg:w-20rem" />
+                <img
+                    src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                    class="w-8rem sm:w-15rem lg:w-20rem"
+                    [alt]="selectedProducto.nombre" />
             </div>
+
             <div class="col-12 lg:col-6">
                 <h2>{{ selectedProducto.nombre }}</h2>
                 <p>Categoría: {{ selectedProducto.categoria }}</p>
-                <p>Precio: {{ selectedProducto.precioUnitario }}$</p>
+                <p>Precio: {{ selectedProducto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</p>
                 <p>Stock disponible: {{ selectedProducto.stock }}</p>
                 <p class="mt-2">Sin descripción disponible.</p>
-                <p-button icon="pi pi-arrow-left" (onClick)="isDialogVisible = false" class="ml-2"
-                    severity="danger"></p-button>
-                <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(selectedProducto)"
-                    class="ml-2"></p-button>
+
+                <p-button
+                    icon="pi pi-arrow-left"
+                    (onClick)="isDialogVisible = false"
+                    class="ml-2"
+                    severity="danger">
+                </p-button>
+
+                <p-button
+                    label="Añadir"
+                    icon="pi pi-cart-plus"
+                    (onClick)="addToCart(selectedProducto)"
+                    class="ml-2">
+                </p-button>
             </div>
         </div>
     </ng-container>
 </p-dialog>
 
-<p-fieldset legend="Valenciano" id="Valenciano">
-    <p class="m-0">
-        Arroz chino sencillo con pollo (asado o broaster)
-    </p>
-    <p>
+<!-- Diálogo factura -->
+<p-dialog
+    header="Factura generada"
+    [(visible)]="isFacturaVisible"
+    [modal]="true"
+    [style]="{ width: '560px' }"
+    [closable]="true"
+    styleClass="invoice-dialog">
 
-    </p>
-    <div class="card" class="flex flex-column gap-2">
-        <div class="flex gap-4 flex-wrap">
-            @for (producto of productos; track producto.id) {
-            <p-card *ngIf="producto.categoria === 'canasta'" header="{{ producto.nombre }}"
-                subheader="{{ producto.categoria }}" [style]="{ width: '360px' }">
-                <ng-template pTemplate="header">
-                    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
-                </ng-template>
-                <p>Stock : {{ producto.stock }}</p>
-                <p>Precio : {{ producto.precioUnitario }}$</p>
-                <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
-                        <p-button label="Ver más" icon="pi pi-eye" (onClick)="openDialog(producto) "></p-button>
-                        <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(producto)">
-                        </p-button>
-                    </div>
-                </ng-template>
-            </p-card>
-            }@empty {
-            <p>No existen productos</p>
-            }
+    <ng-container *ngIf="facturaGenerada">
+        <div class="invoice-box">
+            <div class="invoice-header">
+                <div>
+                    <p class="eyebrow">CHOW YINN</p>
+                    <h2>Factura de venta</h2>
+                </div>
+
+                <span class="invoice-status">
+                    {{ facturaGenerada.estado }}
+                </span>
+            </div>
+
+            <div class="invoice-meta">
+                <p><strong>Factura:</strong> {{ facturaGenerada.numeroFactura }}</p>
+                <p><strong>Fecha:</strong> {{ facturaGenerada.fecha | date:'short' }}</p>
+                <p><strong>Cliente:</strong> {{ facturaGenerada.clienteNombre }}</p>
+                <p><strong>Método de pago:</strong> {{ facturaGenerada.metodoPago }}</p>
+            </div>
+
+            <div class="invoice-items">
+                <div class="invoice-row invoice-row-head">
+                    <span>Producto</span>
+                    <span>Cant.</span>
+                    <span>Total</span>
+                </div>
+
+                <div class="invoice-row" *ngFor="let item of facturaGenerada.items">
+                    <span>{{ item.productoNombre }}</span>
+                    <span>{{ item.cantidad }}</span>
+                    <strong>{{ item.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+                </div>
+            </div>
+
+            <div class="invoice-totals">
+                <div>
+                    <span>Subtotal</span>
+                    <strong>{{ facturaGenerada.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+                </div>
+
+                <div>
+                    <span>IVA</span>
+                    <strong>{{ facturaGenerada.iva | currency:'COP':'symbol':'1.0-0' }}</strong>
+                </div>
+
+                <div class="total-line">
+                    <span>Total</span>
+                    <strong>{{ facturaGenerada.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+                </div>
+            </div>
+
+            <div class="invoice-actions">
+                <p-button
+                    label="Cerrar"
+                    icon="pi pi-times"
+                    severity="secondary"
+                    (onClick)="isFacturaVisible = false">
+                </p-button>
+
+                <button
+                    type="button"
+                    class="invoice-print-button"
+                    onclick="window.print()">
+                    <i class="pi pi-print"></i>
+                    Imprimir
+                </button>
+            </div>
         </div>
-    </div>
-</p-fieldset>
-<p>
-
-</p>
-<p-fieldset legend="Todas las Carnes" id="TodaslasCarnes">
-    <p class="m-0">
-        Arroz chino con todas las carnes (Res Cerdo pollo jamon)
-    </p>
-    <p>
-
-    </p>
-    <div class="card" class="flex flex-column gap-2">
-        <div class="flex gap-4 flex-wrap">
-            @for (producto of productos; track producto.id) {
-            <p-card *ngIf="producto.categoria === 'Lacteo'" header="{{ producto.nombre }}"
-                subheader="{{ producto.categoria }}" [style]="{ width: '360px' }">
-                <ng-template pTemplate="header">
-                    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
-                </ng-template>
-                <p>Stock : {{ producto.stock }}</p>
-                <p>Precio : {{ producto.precioUnitario }}$</p>
-                <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
-                        <p-button label="Ver más" icon="pi pi-eye" (onClick)="openDialog(producto)"></p-button>
-                        <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(producto)">
-                        </p-button>
-
-                    </div>
-                </ng-template>
-            </p-card>
-            }@empty {
-            <p>No existen productos</p>
-            }
-        </div>
-    </div>
-</p-fieldset>
-<p>
-
-</p>
-<p-fieldset legend="Paisa" id="Paisa">
-    <p class="m-0">
-        Arroz chino con todas las carnes (Res Cerdo pollo jamon)
-    </p>
-    <p>
-
-    </p>
-    <div class="card" class="flex flex-column gap-2">
-        <div class="flex gap-4 flex-wrap">
-            @for (producto of productos; track producto.id) {
-            <p-card *ngIf="producto.categoria === 'Lacteo'" header="{{ producto.nombre }}"
-                subheader="{{ producto.categoria }}" [style]="{ width: '360px' }">
-                <ng-template pTemplate="header">
-                    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
-                </ng-template>
-                <p>Stock : {{ producto.stock }}</p>
-                <p>Precio : {{ producto.precioUnitario }}$</p>
-                <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
-                        <p-button label="Ver más" icon="pi pi-eye" (onClick)="openDialog(producto)"></p-button>
-                        <p-button label="Añadir" icon="pi pi-cart-plus" (onClick)="addToCart(producto)">
-                        </p-button>
-                    </div>
-                </ng-template>
-            </p-card>
-            }@empty {
-            <p>No existen productos</p>
-            }
-        </div>
-    </div>
-</p-fieldset>
+    </ng-container>
+</p-dialog>

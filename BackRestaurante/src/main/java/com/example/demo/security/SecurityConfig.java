@@ -42,33 +42,44 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
 
-                // Activa el bean corsConfigurationSource()
+                // Usa el bean corsConfigurationSource()
                 .cors(Customizer.withDefaults())
 
+                // API REST con JWT: sin sesiones en servidor
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // MUY IMPORTANTE: permitir preflight CORS
+                        // Preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Login y registro públicos
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Productos visibles para todos
+                        // Productos: lectura pública
                         .requestMatchers(HttpMethod.GET, "/api/producto/**").permitAll()
 
-                        // Crear, editar y borrar productos solo ADMIN
+                        // Productos: escritura solo ADMIN
                         .requestMatchers(HttpMethod.POST, "/api/producto/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/producto/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/producto/**").hasRole("ADMIN")
+
+                        // Ventas: usuarios autenticados pueden comprar
+                        .requestMatchers(HttpMethod.POST, "/api/ventas/**").hasAnyRole("USER", "ADMIN")
+
+                        // Facturas de ventas: usuario autenticado o admin
+                        .requestMatchers(HttpMethod.GET, "/api/ventas/**").hasAnyRole("USER", "ADMIN")
+
+                        // Reportes: solo ADMIN
+                        .requestMatchers("/api/reportes/**").hasRole("ADMIN")
 
                         // Rutas administrativas futuras
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/contabilidad/**").hasRole("ADMIN")
 
+                        // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
                 )
 
