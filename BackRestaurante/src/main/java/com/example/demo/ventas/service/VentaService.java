@@ -62,12 +62,8 @@ public class VentaService {
             Producto producto = productosRepository.findById(item.productoId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + item.productoId()));
 
-            if (producto.getStock() < item.cantidad()) {
-                throw new RuntimeException("Stock insuficiente para: " + producto.getNombre());
-            }
+            // Eliminada validacion de stock
 
-            producto.setStock(producto.getStock() - item.cantidad());
-            productosRepository.save(producto);
 
             double subtotalDetalle = producto.getPrecioUnitario() * item.cantidad();
 
