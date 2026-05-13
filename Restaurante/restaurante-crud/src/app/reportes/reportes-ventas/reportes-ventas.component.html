@@ -1,0 +1,175 @@
+<div class="reportes-ventas-page">
+ 
+  <!-- ── HEADER ──────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-left">
+      <span class="header-eyebrow">Módulo</span>
+      <h1 class="page-title">Ventas y Punto de Venta</h1>
+    </div>
+    <div class="header-date">
+      <i class="pi pi-calendar"></i>
+      <span>Hoy, 13 de mayo 2026</span>
+    </div>
+  </div>
+ 
+  <!-- ── CARDS RESUMEN ────────────────────────────────────────── -->
+  <div class="cards-grid">
+ 
+    <div class="summary-card">
+      <div class="card-icon card-icon--primary">
+        <i class="pi pi-shopping-cart"></i>
+      </div>
+      <div class="card-body">
+        <span class="card-label">Ventas de hoy</span>
+        <span class="card-value">{{ ventasHoy }}</span>
+        <span class="card-sub">pedidos procesados</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card">
+      <div class="card-icon card-icon--accent">
+        <i class="pi pi-dollar"></i>
+      </div>
+      <div class="card-body">
+        <span class="card-label">Total vendido hoy</span>
+        <span class="card-value">{{ formatCOP(totalVendidoHoy) }}</span>
+        <span class="card-sub">ingresos del día</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card">
+      <div class="card-icon card-icon--success">
+        <i class="pi pi-chart-bar"></i>
+      </div>
+      <div class="card-body">
+        <span class="card-label">Ventas del mes</span>
+        <span class="card-value">{{ ventasMes }}</span>
+        <span class="card-sub">pedidos en mayo</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card">
+      <div class="card-icon card-icon--muted">
+        <i class="pi pi-tag"></i>
+      </div>
+      <div class="card-body">
+        <span class="card-label">Ticket promedio</span>
+        <span class="card-value">{{ formatCOP(ticketPromedio) }}</span>
+        <span class="card-sub">por pedido</span>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ── TABLA VENTAS RECIENTES ───────────────────────────────── -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2 class="section-title">
+        <i class="pi pi-list"></i>
+        Ventas recientes
+      </h2>
+      <span class="section-count">{{ ventasRecientes.length }} registros</span>
+    </div>
+ 
+    <p-table
+      [value]="ventasRecientes"
+      [paginator]="false"
+      styleClass="ventas-table"
+      [rowHover]="true">
+ 
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Factura</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Método de pago</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </ng-template>
+ 
+      <ng-template pTemplate="body" let-venta>
+        <tr>
+          <td><span class="factura-badge">{{ venta.numeroFactura }}</span></td>
+          <td class="text-muted">{{ venta.fecha }}</td>
+          <td><strong>{{ venta.clienteNombre }}</strong></td>
+          <td>
+            <span class="metodo-pago">
+              <i class="pi"
+                [ngClass]="{
+                  'pi-credit-card': venta.metodoPago === 'Tarjeta',
+                  'pi-wallet':      venta.metodoPago === 'Efectivo',
+                  'pi-mobile':      venta.metodoPago === 'Nequi' || venta.metodoPago === 'Daviplata'
+                }">
+              </i>
+              {{ venta.metodoPago }}
+            </span>
+          </td>
+          <td class="total-cell">{{ formatCOP(venta.total) }}</td>
+          <td>
+            <p-tag
+              [value]="venta.estado"
+              [severity]="$any(getEstadoSeverity(venta.estado))">
+            </p-tag>
+          </td>
+          <td>
+            <button
+              pButton
+              label="Ver factura"
+              icon="pi pi-eye"
+              class="p-button-sm p-button-outlined btn-ver-factura"
+              (click)="verFactura(venta.numeroFactura)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+ 
+    </p-table>
+  </div>
+ 
+  <!-- ── PRODUCTOS MÁS VENDIDOS ───────────────────────────────── -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2 class="section-title">
+        <i class="pi pi-star"></i>
+        Productos más vendidos
+      </h2>
+      <span class="section-count">Top {{ productosMasVendidos.length }}</span>
+    </div>
+ 
+    <div class="productos-grid">
+      <div
+        class="producto-card"
+        *ngFor="let p of productosMasVendidos; let i = index">
+ 
+        <div class="producto-rank">#{{ i + 1 }}</div>
+ 
+        <div class="producto-icon">{{ p.icono }}</div>
+ 
+        <div class="producto-info">
+          <span class="producto-nombre">{{ p.producto }}</span>
+          <div class="producto-stats">
+            <span class="stat">
+              <i class="pi pi-box"></i>
+              {{ p.cantidad }} uds.
+            </span>
+            <span class="stat stat--money">
+              <i class="pi pi-dollar"></i>
+              {{ formatCOP(p.total) }}
+            </span>
+          </div>
+        </div>
+ 
+        <div class="producto-bar-wrap">
+          <div
+            class="producto-bar"
+            [style.width.%]="(p.cantidad / 203) * 100">
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+  </div>
+ 
+</div>

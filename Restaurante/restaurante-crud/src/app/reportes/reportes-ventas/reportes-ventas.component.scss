@@ -1,0 +1,305 @@
+// ── Header ─────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+ 
+  .header-eyebrow {
+    display: block;
+    font-size: 13px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+ 
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.1;
+  }
+ 
+  .header-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #9E1B1B;
+    background: var(--color-primary);
+    border: 1px solid #9E1B1B;
+    border-radius: 18px;
+    padding: 8px 16px;
+    box-shadow: 0 8px 24px rgba(43, 30, 30, 0.08);
+ 
+    i { color: var(--color-primary); }
+  }
+}
+ 
+// ── Cards resumen ──────────────────────────────────────────────────────
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+ 
+  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+ 
+.summary-card {
+  background: #9E1B1B;
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  padding: 1.4rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 24px rgba(43, 30, 30, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+ 
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(43, 30, 30, 0.13);
+  }
+ 
+  .card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+ 
+    i { font-size: 22px; color: #FFFFFF; }
+ 
+    &--primary { background: var(--color-primary); }
+    &--accent   { background: var(--color-accent); }
+    &--success  { background: var(--color-success); }
+    &--muted    { background: var(--color-muted); }
+  }
+ 
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+ 
+  .card-label {
+    font-size: 13px;
+    color: #FFFFFF;
+    font-weight: 500;
+  }
+ 
+  .card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+ 
+  .card-sub {
+    font-size: 12px;
+    color: #FFFFFF;
+  }
+}
+ 
+// ── Section card (contenedor reutilizable) ─────────────────────────────
+.section-card {
+  background: var(--color-surface);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 24px rgba(43, 30, 30, 0.08);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+ 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #E8D8C8;
+  color: #9E1B1B;
+ 
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text);
+ 
+    i { color: var(--color-primary); font-size: 16px; }
+  }
+ 
+  .section-count {
+    font-size: 13px;
+    color: var(--color-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 4px 12px;
+  }
+}
+ 
+// ── Tabla ──────────────────────────────────────────────────────────────
+:host ::ng-deep .ventas-table {
+ 
+  .p-datatable-thead > tr > th {
+    background: var(--color-bg);
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.85rem 1.25rem;
+  }
+ 
+  .p-datatable-tbody > tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s;
+ 
+    &:last-child { border-bottom: none; }
+ 
+    > td {
+      padding: 0.9rem 1.25rem;
+      font-size: 14px;
+      color: var(--color-text);
+      border: none;
+      vertical-align: middle;
+    }
+ 
+    &:hover > td { background: #FFF3E8; }
+  }
+}
+ 
+.factura-badge {
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(158, 27, 27, 0.08);
+  color: var(--color-primary);
+  border-radius: 6px;
+  padding: 3px 8px;
+  letter-spacing: 0.04em;
+}
+ 
+.text-muted { color: var(--color-muted) !important; font-size: 13px; }
+ 
+.metodo-pago {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+ 
+  i { color: var(--color-accent); font-size: 13px; }
+}
+ 
+.total-cell {
+  font-weight: 700;
+  color: var(--color-primary) !important;
+}
+ 
+.btn-ver-factura {
+  font-size: 12px !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  border-radius: 8px !important;
+ 
+  &:hover {
+    background: #6F1212 !important;
+    color: #fff !important;
+  }
+}
+ 
+// ── Productos más vendidos ─────────────────────────────────────────────
+.productos-grid {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+ 
+.producto-card {
+  display: grid;
+  grid-template-columns: 32px 48px 1fr 160px;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  transition: transform 0.15s, box-shadow 0.15s;
+ 
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(43, 30, 30, 0.08);
+    background-color: #FFF8F0;
+  }
+ 
+  .producto-rank {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-muted);
+  }
+ 
+  .producto-icon {
+    font-size: 28px;
+    text-align: center;
+  }
+ 
+  .producto-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+ 
+    .producto-nombre {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+ 
+    .producto-stats {
+      display: flex;
+      gap: 16px;
+ 
+      .stat {
+        font-size: 13px;
+        color: var(--color-muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+ 
+        i { font-size: 12px; }
+ 
+        &--money {
+          color: var(--color-primary);
+          font-weight: 600;
+        }
+      }
+    }
+  }
+ 
+  .producto-bar-wrap {
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+ 
+    .producto-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      border-radius: 10px;
+      transition: width 0.6s ease;
+    }
+  }
+}

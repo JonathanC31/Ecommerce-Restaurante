@@ -1,0 +1,93 @@
+.vencimientos-page {
+  .page-title { font-size: 24px; font-weight: 800; margin: 0 0 5px 0; }
+  .header-eyebrow { font-size: 12px; text-transform: uppercase; color: var(--color-primary); font-weight: 700; }
+  .text-muted { color: var(--color-muted); font-size: 13px; }
+  .text-danger { color: var(--color-danger); }
+  .mt-4 { margin-top: 1.5rem; }
+  .mb-4 { margin-bottom: 1.5rem; }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+  }
+
+  .section-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+
+    .section-title { font-size: 16px; font-weight: 800; margin: 0 0 1rem 0; }
+    .sub-title { font-size: 14px; font-weight: 700; margin: 0 0 10px 0; color: var(--color-text); }
+  }
+
+  .vencimientos-list, .desperdicios-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .vencimiento-item, .desperdicio-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-bg);
+      padding: 1rem;
+      border-radius: 1rem;
+
+      .v-info, .d-info {
+        display: flex;
+        flex-direction: column;
+        b { color: var(--color-text); font-size: 14px; }
+        span { font-size: 12px; color: var(--color-muted); }
+      }
+      
+      .d-valor {
+        font-weight: 700;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 14px;
+    background: var(--color-bg);
+    border-radius: 1rem;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .kpi-card {
+    background: var(--color-bg);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+
+    .kpi-value { font-size: 28px; font-weight: 900; }
+    .kpi-label { font-size: 13px; color: var(--color-muted); margin-top: 5px; }
+  }
+
+  .alert-box {
+    padding: 1.25rem;
+    border-radius: 1rem;
+    font-size: 13px;
+    font-weight: 600;
+
+    &.success-bg {
+      background: #e6f4ea;
+      color: #137333;
+    }
+  }
+
+  .loading-state { padding: 3rem; text-align: center; color: var(--color-muted); }
+}

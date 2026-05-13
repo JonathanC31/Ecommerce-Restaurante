@@ -1,0 +1,55 @@
+.facturacion-page {
+  .page-title { font-size: 24px; font-weight: 800; margin: 0 0 5px 0; }
+  .header-eyebrow { font-size: 12px; text-transform: uppercase; color: var(--color-primary); font-weight: 700; }
+  .text-muted { color: var(--color-muted); font-size: 14px; }
+  
+  .text-primary { color: var(--color-primary); }
+  .text-success { color: var(--color-success); }
+  .text-warn { color: #b06000; }
+  .text-danger { color: var(--color-danger); }
+  .font-bold { font-weight: 800; }
+  .w-full { width: 100%; }
+  .mt-4 { margin-top: 1.5rem; }
+  .mb-4 { margin-bottom: 1.5rem; }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+  }
+
+  .section-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin: 0 0 1rem 0;
+    }
+  }
+
+  .resumen-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .resumen-item {
+      background: var(--color-bg);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .label { font-size: 13px; color: var(--color-muted); }
+      .value { font-size: 15px; font-weight: 600; }
+    }
+  }
+
+  .loading-state { padding: 3rem; text-align: center; color: var(--color-muted); }
+}
