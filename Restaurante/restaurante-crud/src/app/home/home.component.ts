@@ -8,6 +8,7 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../servicios/auth.service';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,8 @@ import { ToastModule } from 'primeng/toast';
     RouterOutlet,
     NgIf,
     NgFor,
-    ToastModule
+    ToastModule,
+    TooltipModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

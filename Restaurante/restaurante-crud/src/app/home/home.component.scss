@@ -1,0 +1,118 @@
+.admin-home {
+  padding: 2rem 3rem;
+  background: var(--color-bg, #FFF8F0);
+  min-height: 100vh;
+  font-family: Inter, Arial, sans-serif;
+
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-surface, #FFFFFF);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--color-border, #E8D8C8);
+
+    .header-info {
+      h1 {
+        margin: 0 0 5px 0;
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--color-text, #2B1E1E);
+        span { color: var(--color-primary, #9E1B1B); }
+      }
+      p { margin: 0; color: var(--color-muted, #6B5B5B); font-size: 15px; }
+    }
+
+    .btn-logout {
+      color: var(--color-danger, #B3261E);
+      border-color: var(--color-danger, #B3261E);
+      font-weight: 700;
+      &:hover { background: rgba(179, 38, 30, 0.05); }
+    }
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--color-text, #2B1E1E);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .module-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-border, #E8D8C8);
+    border-radius: 1.25rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(158, 27, 27, 0.08);
+      border-color: rgba(158, 27, 27, 0.3);
+    }
+
+    .card-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i { font-size: 24px; color: #FFFFFF; }
+    }
+
+    .card-body {
+      h3 { margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: var(--color-text, #2B1E1E); }
+      p { margin: 0; font-size: 13px; color: var(--color-muted, #6B5B5B); }
+    }
+
+    /* Colors by module */
+    &.card-reportes .card-icon { background: var(--color-primary, #9E1B1B); }
+    &.card-ventas .card-icon { background: var(--color-success, #2F7D4E); }
+    &.card-inventario .card-icon { background: var(--color-accent, #D8A03D); }
+    &.card-facturacion .card-icon { background: #435E99; }
+    &.card-tienda .card-icon { background: #8B5A2B; }
+    &.card-producto .card-icon { background: var(--color-danger, #B3261E); }
+  }
+
+  .border-bottom {
+    border-bottom: 2px solid var(--color-border, #E8D8C8);
+    padding-bottom: 1rem;
+  }
+
+  .text-primary { color: var(--color-primary, #9E1B1B); }
+  
+  :host ::ng-deep .producto-card {
+    background: var(--color-surface, #FFFFFF);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border, #E8D8C8);
+    
+    .p-card-body { padding: 1.25rem; }
+    .p-card-title { font-size: 18px; font-weight: 800; color: var(--color-text, #2B1E1E); }
+    .p-card-subtitle { font-size: 13px; color: var(--color-muted, #6B5B5B); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  }
+
+  .empty-state {
+    width: 100%;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 1.5rem;
+    border: 2px dashed var(--color-border, #E8D8C8);
+  }
+}
