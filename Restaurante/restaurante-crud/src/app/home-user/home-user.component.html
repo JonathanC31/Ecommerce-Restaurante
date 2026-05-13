@@ -488,80 +488,120 @@
 
 <!-- Diálogo factura -->
 <p-dialog
-    header="Factura generada"
-    [(visible)]="isFacturaVisible"
-    [modal]="true"
-    [style]="{ width: '560px' }"
-    [closable]="true"
-    styleClass="invoice-dialog">
+  [(visible)]="isFacturaVisible"
+  [modal]="true"
+  [style]="{ width: '620px' }"
+  [closable]="true"
+  styleClass="invoice-dialog"
+>
+  <ng-template pTemplate="header">
+    <div class="invoice-dialog-header">
+      <i class="pi pi-receipt"></i>
+      <span>Factura generada</span>
+    </div>
+  </ng-template>
 
-    <ng-container *ngIf="facturaGenerada">
-        <div class="invoice-box">
-            <div class="invoice-header">
-                <div>
-                    <p class="eyebrow">CHOW YINN</p>
-                    <h2>Factura de venta</h2>
-                </div>
+  <ng-container *ngIf="facturaGenerada">
+    <div class="invoice-box">
+      <div class="invoice-top">
+        <div class="invoice-brand">
+          <div class="invoice-logo">
+            <i class="pi pi-shop"></i>
+          </div>
 
-                <span class="invoice-status">
-                    {{ facturaGenerada.estado }}
-                </span>
-            </div>
-
-            <div class="invoice-meta">
-                <p><strong>Factura:</strong> {{ facturaGenerada.numeroFactura }}</p>
-                <p><strong>Fecha:</strong> {{ facturaGenerada.fecha | date:'short' }}</p>
-                <p><strong>Cliente:</strong> {{ facturaGenerada.clienteNombre }}</p>
-                <p><strong>Método de pago:</strong> {{ facturaGenerada.metodoPago }}</p>
-            </div>
-
-            <div class="invoice-items">
-                <div class="invoice-row invoice-row-head">
-                    <span>Producto</span>
-                    <span>Cant.</span>
-                    <span>Total</span>
-                </div>
-
-                <div class="invoice-row" *ngFor="let item of facturaGenerada.items">
-                    <span>{{ item.productoNombre }}</span>
-                    <span>{{ item.cantidad }}</span>
-                    <strong>{{ item.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
-                </div>
-            </div>
-
-            <div class="invoice-totals">
-                <div>
-                    <span>Subtotal</span>
-                    <strong>{{ facturaGenerada.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
-                </div>
-
-                <div>
-                    <span>IVA</span>
-                    <strong>{{ facturaGenerada.iva | currency:'COP':'symbol':'1.0-0' }}</strong>
-                </div>
-
-                <div class="total-line">
-                    <span>Total</span>
-                    <strong>{{ facturaGenerada.total | currency:'COP':'symbol':'1.0-0' }}</strong>
-                </div>
-            </div>
-
-            <div class="invoice-actions">
-                <p-button
-                    label="Cerrar"
-                    icon="pi pi-times"
-                    severity="secondary"
-                    (onClick)="isFacturaVisible = false">
-                </p-button>
-
-                <button
-                    type="button"
-                    class="invoice-print-button"
-                    onclick="window.print()">
-                    <i class="pi pi-print"></i>
-                    Imprimir
-                </button>
-            </div>
+          <div>
+            <p class="eyebrow">CHOW YINN</p>
+            <h2>Factura de venta</h2>
+            <span>Restaurante chino</span>
+          </div>
         </div>
-    </ng-container>
+
+        <span class="invoice-status">
+          {{ facturaGenerada.estado }}
+        </span>
+      </div>
+
+      <div class="invoice-number-box">
+        <div>
+          <span>Número de factura</span>
+          <strong>{{ facturaGenerada.numeroFactura }}</strong>
+        </div>
+
+        <div>
+          <span>Fecha de emisión</span>
+          <strong>{{ facturaGenerada.fecha | date:'short' }}</strong>
+        </div>
+      </div>
+
+      <div class="invoice-client-box">
+        <h3>Datos del cliente</h3>
+
+        <div class="invoice-client-grid">
+          <div>
+            <span>Cliente</span>
+            <strong>{{ facturaGenerada.clienteNombre }}</strong>
+          </div>
+
+          <div>
+            <span>Método de pago</span>
+            <strong>{{ facturaGenerada.metodoPago }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="invoice-items">
+        <div class="invoice-row invoice-row-head">
+          <span>Producto</span>
+          <span>Cant.</span>
+          <span>Total</span>
+        </div>
+
+        <div class="invoice-row" *ngFor="let item of facturaGenerada.items">
+          <span>{{ item.productoNombre }}</span>
+          <span>{{ item.cantidad }}</span>
+          <strong>{{ item.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <div class="invoice-summary">
+        <div>
+          <span>Subtotal</span>
+          <strong>{{ facturaGenerada.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+
+        <div>
+          <span>IVA</span>
+          <strong>{{ facturaGenerada.iva | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+
+        <div class="total-line">
+          <span>Total pagado</span>
+          <strong>{{ facturaGenerada.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <div class="invoice-note">
+        <i class="pi pi-check-circle"></i>
+        <span>Gracias por tu compra. Esta factura fue generada internamente por Chow Yinn.</span>
+      </div>
+
+      <div class="invoice-actions">
+        <p-button
+          label="Cerrar"
+          icon="pi pi-times"
+          styleClass="invoice-close-button"
+          (onClick)="isFacturaVisible = false"
+        ></p-button>
+
+        <button
+          type="button"
+          class="invoice-print-button"
+          onclick="window.print()"
+        >
+          <i class="pi pi-print"></i>
+          Imprimir
+        </button>
+      </div>
+    </div>
+  </ng-container>
 </p-dialog>
