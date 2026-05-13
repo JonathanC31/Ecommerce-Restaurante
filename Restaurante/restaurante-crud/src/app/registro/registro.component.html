@@ -1,74 +1,138 @@
 <p-toast></p-toast>
 
-<div class="flex justify-content-center align-items-center min-h-screen w-full">
-  <p-card header="Registro de Usuario" class="w-10">
+<section class="registro-page">
+  <div class="registro-card">
+    <div class="registro-header">
+      <div class="brand-icon">
+        <i class="pi pi-user-plus"></i>
+      </div>
 
-    <form [formGroup]="formUser" (ngSubmit)="onSubmit()" class="flex flex-column gap-2">
+      <h1>Crea tu cuenta en Chow Yinn</h1>
+      <p>
+        Regístrate para guardar tus datos, realizar pedidos y disfrutar una mejor experiencia.
+      </p>
+    </div>
 
-      <div class="field flex flex-column gap-1">
-        <label for="login">Username</label>
-        <input type="text" pInputText id="login" formControlName="login" />
-        <div *ngIf="formUser.get('login')?.invalid && formUser.get('login')?.touched">
-          <small class="error">Username es requerido.</small>
+    <form [formGroup]="formUser" (ngSubmit)="onSubmit()" class="registro-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="login">Usuario</label>
+          <input
+            type="text"
+            pInputText
+            id="login"
+            formControlName="login"
+            placeholder="Ingresa tu usuario"
+          />
+          <small
+            class="error"
+            *ngIf="formUser.get('login')?.invalid && formUser.get('login')?.touched"
+          >
+            Username es requerido.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input
+            type="email"
+            pInputText
+            id="email"
+            formControlName="email"
+            placeholder="Ingresa tu correo"
+          />
+          <small
+            class="error"
+            *ngIf="formUser.get('email')?.invalid && formUser.get('email')?.touched"
+          >
+            Email válido es requerido.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            pInputText
+            id="password"
+            formControlName="password"
+            placeholder="Ingresa tu contraseña"
+          />
+          <small
+            class="error"
+            *ngIf="formUser.get('password')?.invalid && formUser.get('password')?.touched"
+          >
+            Password es requerido.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input
+            type="text"
+            pInputText
+            id="name"
+            formControlName="name"
+            placeholder="Ingresa tu nombre"
+          />
+          <small
+            class="error"
+            *ngIf="formUser.get('name')?.invalid && formUser.get('name')?.touched"
+          >
+            Nombre es requerido.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Teléfono</label>
+          <input
+            type="text"
+            pInputText
+            id="phoneNumber"
+            formControlName="phoneNumber"
+            placeholder="Ingresa tu teléfono"
+          />
+          <small
+            class="error"
+            *ngIf="formUser.get('phoneNumber')?.invalid && formUser.get('phoneNumber')?.touched"
+          >
+            Teléfono es requerido.
+          </small>
+        </div>
+
+        <div class="form-group form-group-full">
+          <label for="address">Dirección</label>
+          <input
+            type="text"
+            pInputText
+            id="address"
+            formControlName="address"
+            placeholder="Ingresa tu dirección"
+          />
+          <small
+            class="error"
+            *ngIf="formUser.get('address')?.invalid && formUser.get('address')?.touched"
+          >
+            Dirección es requerida.
+          </small>
         </div>
       </div>
 
-      <div class="field flex flex-column gap-1">
-        <label for="password">Password</label>
-        <input type="password" pInputText id="password" formControlName="password" />
-        <div *ngIf="formUser.get('password')?.invalid && formUser.get('password')?.touched">
-          <small class="error">Password es requerido.</small>
-        </div>
-      </div>
-
-      <div class="field flex flex-column gap-1">
-        <label for="name">Nombre</label>
-        <input type="text" pInputText id="name" formControlName="name" />
-        <div *ngIf="formUser.get('name')?.invalid && formUser.get('name')?.touched">
-          <small class="error">Nombre es requerido.</small>
-        </div>
-      </div>
-
-      <div class="field flex flex-column gap-1">
-        <label for="email">Email</label>
-        <input type="email" pInputText id="email" formControlName="email" />
-        <div *ngIf="formUser.get('email')?.invalid && formUser.get('email')?.touched">
-          <small class="error">Email válido es requerido.</small>
-        </div>
-      </div>
-
-      <div class="field flex flex-column gap-1">
-        <label for="phoneNumber">Teléfono</label>
-        <input type="text" pInputText id="phoneNumber" formControlName="phoneNumber" />
-        <div *ngIf="formUser.get('phoneNumber')?.invalid && formUser.get('phoneNumber')?.touched">
-          <small class="error">Teléfono es requerido.</small>
-        </div>
-      </div>
-
-      <div class="field flex flex-column gap-1">
-        <label for="address">Dirección</label>
-        <input type="text" pInputText id="address" formControlName="address" />
-        <div *ngIf="formUser.get('address')?.invalid && formUser.get('address')?.touched">
-          <small class="error">Dirección es requerida.</small>
-        </div>
-      </div>
-
-      <div class="flex gap-2 mt-3">
+      <div class="actions">
         <p-button
           label="Guardar"
           type="submit"
-          [loading]="isSaveInProgress">
-        </p-button>
+          [loading]="isSaveInProgress"
+          styleClass="save-button"
+        ></p-button>
 
         <p-button
           label="Volver"
           type="button"
-          severity="secondary"
-          routerLink="/login">
-        </p-button>
+          routerLink="/login"
+          styleClass="back-button"
+        ></p-button>
       </div>
-
     </form>
-  </p-card>
-</div>
-  
+  </div>
+</section>
