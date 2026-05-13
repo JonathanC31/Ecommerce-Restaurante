@@ -112,9 +112,7 @@
                         src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80"
                         [alt]="producto.nombre" />
 
-                    <span class="stock-pill">
-                        Stock {{ producto.stock }}
-                    </span>
+                    <!-- stock removed -->
                 </div>
 
                 <div class="highlight-body">
@@ -163,9 +161,7 @@
                 src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
                 [alt]="producto.nombre" />
 
-            <span class="menu-stock-pill">
-                Stock {{ producto.stock }}
-            </span>
+            <!-- stock removed -->
         </div>
 
         <div class="menu-product-body">
@@ -185,10 +181,7 @@
                     <strong>{{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</strong>
                 </div>
 
-                <div>
-                    <span>Disponible</span>
-                    <strong>{{ producto.stock }}</strong>
-                </div>
+                <!-- stock removed -->
             </div>
 
             <div class="menu-product-actions">
@@ -387,7 +380,7 @@
 
             <div class="cart-info">
                 <h4>{{ item.producto.nombre }}</h4>
-                <p>Stock disponible: {{ item.producto.stock }}</p>
+                <!-- stock removed -->
 
                 <div class="cart-quantity">
                     <span>Cantidad:</span>
@@ -395,7 +388,6 @@
                     <p-inputNumber
                         [(ngModel)]="item.cantidad"
                         [min]="1"
-                        [max]="item.producto.stock"
                         [showButtons]="true"
                         buttonLayout="horizontal"
                         incrementButtonIcon="pi pi-plus"
@@ -465,7 +457,7 @@
                 <h2>{{ selectedProducto.nombre }}</h2>
                 <p>Categoría: {{ selectedProducto.categoria }}</p>
                 <p>Precio: {{ selectedProducto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</p>
-                <p>Stock disponible: {{ selectedProducto.stock }}</p>
+                <!-- stock removed -->
                 <p class="mt-2">Sin descripción disponible.</p>
 
                 <p-button

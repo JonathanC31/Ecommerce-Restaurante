@@ -21,4 +21,5 @@ export interface ProductoVendidoReporte {
   producto: string;
   cantidad: number;
   total: number;
+  icono?: string;
 }

@@ -1,0 +1,58 @@
+<div class="contabilidad-page fade-in">
+  
+  <div class="header-left mb-4">
+    <span class="header-eyebrow">Finanzas</span>
+    <h1 class="page-title">Contabilidad Básica</h1>
+    <p class="text-muted">Control financiero de ingresos, egresos y rentabilidad.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <i class="pi pi-spin pi-spinner"></i> Cargando datos contables...
+  </div>
+
+  <div *ngIf="!loading" class="contabilidad-content">
+    
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-ingreso">
+        <span class="kpi-label">Ingresos (Mes)</span>
+        <span class="kpi-value">{{ formatCOP(resumen?.ingresosMes) }}</span>
+      </div>
+      <div class="kpi-card kpi-egreso">
+        <span class="kpi-label">Egresos (Mes)</span>
+        <span class="kpi-value">{{ formatCOP(resumen?.egresosMes) }}</span>
+      </div>
+      <div class="kpi-card kpi-utilidad">
+        <span class="kpi-label">Utilidad Bruta Estimada</span>
+        <span class="kpi-value">{{ formatCOP(resumen?.utilidadEstimada) }}</span>
+        <div class="kpi-sub">
+          <span>IVA Gen: {{ formatCOP(resumen?.ivaGenerado) }}</span>
+          <span *ngIf="(resumen?.desperdicioValorizado || 0) > 0" class="text-warn">| Mermas: -{{ formatCOP(resumen?.desperdicioValorizado) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card mt-4">
+      <h3 class="section-title">Movimientos recientes (Libro mayor)</h3>
+      
+      <div class="movimientos-list">
+        <div class="movimiento-item" *ngFor="let m of movimientos">
+          <div class="mov-tipo">
+            <p-tag [value]="m.tipo" [severity]="$any(getTipoSeverity(m.tipo))"></p-tag>
+          </div>
+          <div class="mov-desc">
+            <b>{{ m.descripcion }}</b>
+            <span class="text-muted">{{ m.fecha | date:'short' }}</span>
+          </div>
+          <div class="mov-valor" [ngClass]="{'text-success': m.tipo === 'INGRESO', 'text-danger': m.tipo === 'EGRESO', 'text-warn': m.tipo === 'PERDIDA'}">
+            {{ m.tipo === 'INGRESO' ? '+' : '-' }}{{ formatCOP(m.valor) }}
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="movimientos.length === 0">
+          No hay movimientos contables registrados.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

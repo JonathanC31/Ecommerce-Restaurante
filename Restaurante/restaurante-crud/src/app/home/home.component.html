@@ -1,68 +1,88 @@
 <p-toast></p-toast>
-
-<div class="flex flex-column gap-2">
-
-  <div class="flex gap-2">
-    <p-button
-      label="Crear producto"
-      routerLink="/producto-form/new"
-      class="font-bold ml-2">
-    </p-button>
-
-    <p-button
-      icon="pi pi-sign-out"
-      label="Cerrar sesión"
-      (onClick)="logout()"
-      class="font-bold ml-2">
-    </p-button>
-
-    <p-button
-      icon="pi pi-book"
-      label="Reportes"
-      routerLink="/reportes"
-      class="font-bold ml-2">
-    </p-button>
+<div class="admin-home fade-in">
+  
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="header-info">
+      <h1>Panel de Control <span>Chow Yinn</span></h1>
+      <p>Bienvenido al centro de administración y gestión.</p>
+    </div>
+    <div class="header-actions">
+      <button pButton icon="pi pi-sign-out" label="Cerrar sesión" (click)="logout()" class="p-button-outlined btn-logout"></button>
+    </div>
   </div>
 
-  <div class="flex gap-4 flex-wrap">
-
-    @for (producto of productos; track producto.id) {
-      <p-card
-        header="{{ producto.nombre }}"
-        subheader="{{ producto.categoria }}"
-        [style]="{ width: '360px' }">
-
-        <ng-template pTemplate="header">
-          <img
-            alt="Card"
-            src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
-        </ng-template>
-
-        <p>Stock : {{ producto.stock }}</p>
-        <p>Precio : {{ producto.precioUnitario }}$</p>
-
-        <ng-template pTemplate="footer">
-          <div class="flex gap-3 mt-1">
-
-            <p-button
-              (onClick)="deleteProducto(producto.id!)"
-              label="Borrar"
-              severity="secondary">
-            </p-button>
-
-            <p-button
-              label="Editar"
-              routerLink="/producto-form/{{ producto.id }}"
-              class="font-bold ml-2">
-            </p-button>
-
-          </div>
-        </ng-template>
-
-      </p-card>
-    } @empty {
-      <p>No existen productos</p>
-    }
-
+  <!-- Cards de Acceso Rápido -->
+  <h2 class="section-title">Módulos Principales</h2>
+  <div class="modules-grid">
+    <a routerLink="/reportes" class="module-card card-reportes">
+      <div class="card-icon"><i class="pi pi-chart-bar"></i></div>
+      <div class="card-body">
+        <h3>Dashboard Gerencial</h3>
+        <p>Métricas y KPIs</p>
+      </div>
+    </a>
+    <a routerLink="/reportes/ventas" class="module-card card-ventas">
+      <div class="card-icon"><i class="pi pi-shopping-cart"></i></div>
+      <div class="card-body">
+        <h3>Ventas y Punto de Venta</h3>
+        <p>Pedidos y caja</p>
+      </div>
+    </a>
+    <a routerLink="/inventario" class="module-card card-inventario">
+      <div class="card-icon"><i class="pi pi-box"></i></div>
+      <div class="card-body">
+        <h3>Inventario y Materias Primas</h3>
+        <p>Control de stock</p>
+      </div>
+    </a>
+    <a routerLink="/reportes/facturacion" class="module-card card-facturacion">
+      <div class="card-icon"><i class="pi pi-file"></i></div>
+      <div class="card-body">
+        <h3>Facturación Electrónica</h3>
+        <p>Reportes DIAN</p>
+      </div>
+    </a>
+    <a routerLink="/home-user" class="module-card card-tienda">
+      <div class="card-icon"><i class="pi pi-shop"></i></div>
+      <div class="card-body">
+        <h3>Tienda Pública</h3>
+        <p>Vista de clientes</p>
+      </div>
+    </a>
+    <a routerLink="/producto-form/new" class="module-card card-producto">
+      <div class="card-icon"><i class="pi pi-plus-circle"></i></div>
+      <div class="card-body">
+        <h3>Nuevo Producto</h3>
+        <p>Catálogo del menú</p>
+      </div>
+    </a>
   </div>
+
+  <!-- Productos Existentes -->
+  <div class="productos-section mt-5">
+    <div class="flex justify-content-between align-items-center mb-4 border-bottom">
+      <h2 class="section-title mb-0">Platos del Menú</h2>
+    </div>
+    
+    <div class="flex gap-4 flex-wrap pb-5">
+      @for (producto of productos; track producto.id) {
+        <p-card header="{{ producto.nombre }}" subheader="{{ producto.categoria }}" [style]="{ width: '280px' }" styleClass="producto-card shadow-3">
+          <p class="font-bold text-2xl text-primary m-0 mt-2">{{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</p>
+          <ng-template pTemplate="footer">
+            <div class="flex gap-2 mt-2">
+              <p-button label="Editar" icon="pi pi-pencil" routerLink="/producto-form/{{ producto.id }}" styleClass="p-button-sm p-button-info flex-1"></p-button>
+              <p-button icon="pi pi-trash" (onClick)="deleteProducto(producto.id!)" styleClass="p-button-sm p-button-danger p-button-text" pTooltip="Eliminar"></p-button>
+            </div>
+          </ng-template>
+        </p-card>
+      } @empty {
+        <div class="empty-state">
+          <i class="pi pi-info-circle text-4xl mb-3 text-muted"></i>
+          <p class="text-muted m-0">No existen platos registrados en el menú. Usa el botón superior para agregar uno.</p>
+        </div>
+      }
+    </div>
+  </div>
+
 </div>

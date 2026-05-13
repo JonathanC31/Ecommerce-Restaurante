@@ -1,0 +1,69 @@
+<div class="vencimientos-page fade-in">
+  
+  <div class="header-left mb-4">
+    <span class="header-eyebrow">Inventarios</span>
+    <h1 class="page-title">Vencimientos y Desperdicios</h1>
+    <p class="text-muted">Control para reducir pérdidas económicas y desperdicio alimentario.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <i class="pi pi-spin pi-spinner"></i> Analizando mermas...
+  </div>
+
+  <div *ngIf="!loading" class="main-grid mt-4">
+    
+    <!-- Próximos Vencimientos -->
+    <div class="section-card">
+      <h3 class="section-title">Próximos Vencimientos (7 días)</h3>
+      
+      <div class="vencimientos-list">
+        <div class="vencimiento-item" *ngFor="let v of vencimientos">
+          <div class="v-info">
+            <b>{{ v.nombre }}</b>
+            <span>Cantidad: {{ v.cantidadDisponible }} {{ v.unidadMedida }}</span>
+          </div>
+          <div class="v-tag">
+            <p-tag [value]="getDiasRestantes(v.fechaVencimiento) + ' días'" severity="warning"></p-tag>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="vencimientos.length === 0">
+          No hay insumos próximos a vencer.
+        </div>
+      </div>
+    </div>
+
+    <!-- Desperdicio del Mes -->
+    <div class="section-card">
+      <h3 class="section-title">Desperdicio del Mes</h3>
+      
+      <div class="kpi-grid mb-4">
+        <div class="kpi-card">
+          <span class="kpi-value text-danger">{{ formatCOP(costoDesperdicioMes) }}</span>
+          <span class="kpi-label">Costo estimado perdido</span>
+        </div>
+      </div>
+
+      <div class="alert-box success-bg mb-4" *ngIf="costoDesperdicioMes === 0">
+        ¡Excelente trabajo! No hay mermas registradas este mes.
+      </div>
+
+      <h4 class="sub-title">Historial de mermas registradas</h4>
+      <div class="desperdicios-list">
+        <div class="desperdicio-item" *ngFor="let d of desperdicios">
+          <div class="d-info">
+            <b>{{ d.itemNombre }}</b>
+            <span>{{ d.motivo }} - {{ d.fecha | date:'shortDate' }}</span>
+          </div>
+          <div class="d-valor text-danger">
+            -{{ formatCOP(d.cantidad * d.costoUnitario) }}
+          </div>
+        </div>
+        <div class="empty-state" *ngIf="desperdicios.length === 0">
+          Cero mermas.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

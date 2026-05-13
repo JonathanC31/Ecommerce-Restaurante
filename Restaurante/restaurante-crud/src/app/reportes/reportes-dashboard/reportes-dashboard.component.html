@@ -1,0 +1,107 @@
+<div class="dashboard-page fade-in">
+  
+  <div class="page-header mb-4 flex justify-content-between align-items-center flex-wrap gap-3">
+    <div class="header-left">
+      <span class="header-eyebrow">Gerencia</span>
+      <h1 class="page-title">Dashboard Gerencial</h1>
+      <p class="text-muted m-0">Vista central para tomar decisiones con datos actualizados.</p>
+    </div>
+    <div class="header-right">
+      <button pButton label="Panel de Control" icon="pi pi-home" routerLink="/home" class="p-button-outlined"></button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <i class="pi pi-spin pi-spinner"></i> Cargando dashboard...
+  </div>
+
+  <div *ngIf="!loading" class="dashboard-content">
+    
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Ventas del mes</span>
+        <div class="kpi-value-row">
+          <span class="kpi-value">{{ formatCOP(resumenVentas?.totalVentasMes) }}</span>
+          <span class="pill good">{{ resumenVentas?.ventasMes || 0 }} pedidos</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Ticket promedio</span>
+        <div class="kpi-value-row">
+          <span class="kpi-value">{{ formatCOP(resumenVentas?.ticketPromedio) }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Facturas validadas</span>
+        <div class="kpi-value-row">
+          <span class="kpi-value">{{ resumenFacturacion?.facturasValidadas || 0 }}</span>
+          <span class="pill good">OK</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Desperdicio (Mes)</span>
+        <div class="kpi-value-row">
+          <span class="kpi-value">{{ formatCOP(resumenInventario?.costoDesperdicioMes) }}</span>
+          <span class="pill warn" *ngIf="(resumenInventario?.costoDesperdicioMes || 0) > 0">Alerta</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-grid mt-4">
+      
+      <!-- Gráfica Simple CSS -->
+      <div class="section-card">
+        <h3 class="section-title">Progreso de Ventas (Visualización simple)</h3>
+        <div class="css-chart-container">
+          <div class="css-bar-wrapper">
+            <div class="css-bar" [style.height.%]="60"></div>
+            <span class="bar-label">Semana 1</span>
+          </div>
+          <div class="css-bar-wrapper">
+            <div class="css-bar" [style.height.%]="80"></div>
+            <span class="bar-label">Semana 2</span>
+          </div>
+          <div class="css-bar-wrapper">
+            <div class="css-bar" [style.height.%]="45"></div>
+            <span class="bar-label">Semana 3</span>
+          </div>
+          <div class="css-bar-wrapper">
+            <div class="css-bar" [style.height.%]="90"></div>
+            <span class="bar-label">Semana 4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertas críticas -->
+      <div class="section-card">
+        <h3 class="section-title text-danger">Alertas críticas</h3>
+        
+        <div class="alert-list">
+          <div class="alert-item" *ngIf="(resumenFacturacion?.facturasPendientes || 0) > 0">
+            <b class="text-danger mr-2">!</b>
+            {{ resumenFacturacion?.facturasPendientes }} facturas pendientes de validación
+          </div>
+
+          <div class="alert-item" *ngIf="(resumenInventario?.itemsPorVencer || 0) > 0">
+            <b class="text-danger mr-2">!</b>
+            {{ resumenInventario?.itemsPorVencer }} insumos por vencer en los próximos días
+          </div>
+
+          <div class="alert-item" *ngFor="let item of itemsBajoStock | slice:0:3">
+            <b class="text-danger mr-2">!</b>
+            {{ item.nombre }} se encuentra bajo stock ({{ item.cantidadDisponible }} {{ item.unidadMedida }})
+          </div>
+
+          <div class="alert-item empty-alerts" *ngIf="itemsBajoStock.length === 0 && !resumenFacturacion?.facturasPendientes && !resumenInventario?.itemsPorVencer">
+            <i class="pi pi-check-circle"></i> Todo está en orden.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

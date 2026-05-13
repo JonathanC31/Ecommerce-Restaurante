@@ -1,0 +1,70 @@
+<div class="inventario-page fade-in">
+  
+  <div class="page-header mb-4">
+    <div class="header-left">
+      <span class="header-eyebrow">Inventarios</span>
+      <h1 class="page-title">Control de Inventarios</h1>
+      <p class="text-muted">Entradas, salidas, stock mínimo y trazabilidad de productos.</p>
+    </div>
+    <div class="header-right">
+      <button pButton label="Gestionar Inventario" icon="pi pi-box" routerLink="/inventario" class="p-button-primary btn-gestionar"></button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <i class="pi pi-spin pi-spinner"></i> Cargando inventario...
+  </div>
+
+  <div *ngIf="!loading" class="inventario-content">
+    
+    <div class="kpi-grid mb-4">
+      <div class="kpi-card">
+        <span class="kpi-label">Total Ítems</span>
+        <span class="kpi-value">{{ resumen?.totalItems || 0 }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Ítems Bajo Stock</span>
+        <span class="kpi-value text-warn">{{ resumen?.itemsBajoStock || 0 }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Costo Total Inventario</span>
+        <span class="kpi-value text-success">{{ formatCOP(resumen?.costoTotalInventario) }}</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">Stock Actual de Materias Primas</h3>
+      
+      <p-table [value]="items" [paginator]="true" [rows]="10" styleClass="p-datatable-sm" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Stock</th>
+            <th>Mínimo</th>
+            <th>Costo Unit.</th>
+            <th>Estado</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td><strong>{{ item.nombre }}</strong></td>
+            <td>{{ item.categoria }}</td>
+            <td>{{ item.cantidadDisponible }} {{ item.unidadMedida }}</td>
+            <td>{{ item.stockMinimo }} {{ item.unidadMedida }}</td>
+            <td>{{ formatCOP(item.costoUnitario) }}</td>
+            <td>
+              <p-tag [value]="item.bajoStock ? 'Bajo stock' : 'OK'" [severity]="item.bajoStock ? 'warning' : 'success'"></p-tag>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center p-4">No hay materias primas registradas.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+</div>

@@ -28,7 +28,4 @@ public class Producto {
     @Column(name="precioUnitario")
     private double precioUnitario;
 
-    @Column(name="stock")
-    private int stock;
-
 }

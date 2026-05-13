@@ -44,8 +44,7 @@ export class ProductoFormComponent {
       id: [null],
       nombre: ['', Validators.required],
       categoria: ['', Validators.required],
-      precioUnitario: [1, [Validators.required, Validators.min(1)]],
-      stock: [0, [Validators.required, Validators.min(1)]]
+      precioUnitario: [1, [Validators.required, Validators.min(1)]]
     });
 
   }

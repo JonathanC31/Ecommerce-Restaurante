@@ -1,0 +1,86 @@
+.contabilidad-page {
+  .page-title { font-size: 24px; font-weight: 800; margin: 0 0 5px 0; }
+  .header-eyebrow { font-size: 12px; text-transform: uppercase; color: var(--color-primary); font-weight: 700; }
+  .text-muted { color: var(--color-muted); font-size: 13px; }
+  .text-success { color: var(--color-success); font-weight: 800; }
+  .text-danger { color: var(--color-danger); font-weight: 800; }
+  .text-warn { color: #b06000; }
+  .mt-4 { margin-top: 1.5rem; }
+  .mb-4 { margin-bottom: 1.5rem; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+  }
+
+  .kpi-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+
+    .kpi-label { font-size: 14px; color: var(--color-muted); margin-bottom: 8px; }
+    .kpi-value { font-size: 32px; font-weight: 900; color: var(--color-text); }
+    .kpi-sub { font-size: 12px; color: var(--color-muted); margin-top: 8px; font-weight: 600; }
+
+    &.kpi-ingreso { border-top: 4px solid var(--color-success); }
+    &.kpi-egreso { border-top: 4px solid var(--color-danger); }
+    &.kpi-utilidad { border-top: 4px solid var(--color-accent); }
+  }
+
+  .section-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+
+    .section-title { font-size: 16px; font-weight: 800; margin: 0 0 1rem 0; }
+  }
+
+  .movimientos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .movimiento-item {
+      display: grid;
+      grid-template-columns: 100px 1fr 150px;
+      gap: 1rem;
+      align-items: center;
+      background: var(--color-bg);
+      padding: 1rem;
+      border-radius: 1rem;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
+
+      .mov-desc {
+        display: flex;
+        flex-direction: column;
+        b { color: var(--color-text); font-size: 14px; }
+        span { font-size: 12px; }
+      }
+      .mov-valor {
+        text-align: right;
+        font-size: 16px;
+        @media (max-width: 600px) { text-align: left; }
+      }
+    }
+
+    .empty-state {
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-muted);
+      font-size: 14px;
+    }
+  }
+
+  .loading-state { padding: 3rem; text-align: center; color: var(--color-muted); }
+}
