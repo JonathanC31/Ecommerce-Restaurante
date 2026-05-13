@@ -195,28 +195,12 @@ export class HomeUserComponent implements OnInit {
   }
 
   addToCart(producto: Producto): void {
-    if (producto.stock <= 0) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Producto agotado',
-        detail: `${producto.nombre} no tiene stock disponible`
-      });
-      return;
-    }
+    // stock validation removed
 
     const item = this.carrito.find((p) => p.producto.id === producto.id);
 
     if (item) {
-      if (item.cantidad < producto.stock) {
-        item.cantidad += 1;
-      } else {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Stock máximo',
-          detail: `No hay más unidades disponibles de ${producto.nombre}`
-        });
-        return;
-      }
+      item.cantidad += 1;
     } else {
       this.carrito.push({ producto, cantidad: 1 });
     }
