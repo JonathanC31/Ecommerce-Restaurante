@@ -72,8 +72,9 @@ public class SecurityConfig {
                         // Facturas de ventas: usuario autenticado o admin
                         .requestMatchers(HttpMethod.GET, "/api/ventas/**").hasAnyRole("USER", "ADMIN")
 
-                        // Reportes: solo ADMIN
+                        // Reportes e Inventario: solo ADMIN
                         .requestMatchers("/api/reportes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/inventario/**").hasRole("ADMIN")
 
                         // Rutas administrativas futuras
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
