@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProductoVendidoReporte, ResumenVentas, VentaReporte } from '../modelos/reporte-venta';
+import { FacturaReporteResponse, ResumenFacturacionResponse } from '../modelos/reporte-facturacion';
+import { MovimientoContableResponse, ResumenContabilidadResponse } from '../modelos/reporte-contabilidad';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,19 +10,35 @@ import { Observable } from 'rxjs';
 })
 export class ReporteService {
 
-  private apiUrl = 'http://localhost:8080/api/reportes/ventas';
+  private apiUrl = 'http://localhost:8080/api/reportes';
 
   constructor(private http: HttpClient) {}
 
   obtenerResumen(): Observable<ResumenVentas> {
-    return this.http.get<ResumenVentas>(`${this.apiUrl}/resumen`);
+    return this.http.get<ResumenVentas>(`${this.apiUrl}/ventas/resumen`);
   }
 
   listarVentas(): Observable<VentaReporte[]> {
-    return this.http.get<VentaReporte[]>(this.apiUrl);
+    return this.http.get<VentaReporte[]>(`${this.apiUrl}/ventas`);
   }
 
   productosMasVendidos(): Observable<ProductoVendidoReporte[]> {
-    return this.http.get<ProductoVendidoReporte[]>(`${this.apiUrl}/productos-mas-vendidos`);
+    return this.http.get<ProductoVendidoReporte[]>(`${this.apiUrl}/ventas/productos-mas-vendidos`);
+  }
+
+  obtenerResumenFacturacion(): Observable<ResumenFacturacionResponse> {
+    return this.http.get<ResumenFacturacionResponse>(`${this.apiUrl}/facturacion/resumen`);
+  }
+
+  listarFacturas(): Observable<FacturaReporteResponse[]> {
+    return this.http.get<FacturaReporteResponse[]>(`${this.apiUrl}/facturacion`);
+  }
+
+  obtenerResumenContabilidad(): Observable<ResumenContabilidadResponse> {
+    return this.http.get<ResumenContabilidadResponse>(`${this.apiUrl}/contabilidad/resumen`);
+  }
+
+  listarMovimientosContables(): Observable<MovimientoContableResponse[]> {
+    return this.http.get<MovimientoContableResponse[]>(`${this.apiUrl}/contabilidad/movimientos`);
   }
 }
