@@ -60,6 +60,10 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  saveToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
