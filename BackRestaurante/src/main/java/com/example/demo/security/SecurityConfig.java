@@ -28,13 +28,16 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomUserDetailsService userDetailsService
+            CustomUserDetailsService userDetailsService,
+            OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
     }
 
     @Bean
@@ -82,6 +85,10 @@ public class SecurityConfig {
 
                         // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
+                )
+
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2LoginSuccessHandler)
                 )
 
                 .authenticationProvider(authenticationProvider())

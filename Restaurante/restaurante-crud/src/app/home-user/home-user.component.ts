@@ -20,13 +20,15 @@ import { OrderListModule } from 'primeng/orderlist';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { DialogModule } from 'primeng/dialog';
-import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { Producto } from '../modelos/producto';
 import { ProductoService } from '../servicios/producto.service';
 import { AuthService } from '../servicios/auth.service';
 import { VentaService } from '../servicios/venta.service';
+import { CartService, CartItem } from '../servicios/cart.service';
 import { CrearVentaRequest, FacturaResponse } from '../modelos/venta';
+import { ToastModule } from 'primeng/toast';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -50,7 +52,6 @@ interface CategoriaMenu {
     RouterOutlet,
     ReactiveFormsModule,
     FormsModule,
-
     ToastModule,
     DialogModule,
     DividerModule,
@@ -67,7 +68,8 @@ interface CategoriaMenu {
     ButtonModule,
     RippleModule,
     AvatarModule,
-    StyleClassModule
+    StyleClassModule,
+    InputTextModule
   ],
   templateUrl: './home-user.component.html',
   styleUrl: './home-user.component.scss'
@@ -88,8 +90,13 @@ export class HomeUserComponent implements OnInit {
   selectedProducto: Producto | null = null;
   isDialogVisible: boolean = false;
 
-  carrito: { producto: Producto; cantidad: number }[] = [];
+  carrito: CartItem[] = [];
   totalAmount: number = 0;
+
+  loginVisible: boolean = false;
+  loginUsername = '';
+  loginPassword = '';
+  loginLoading: boolean = false;
 
   facturaGenerada: FacturaResponse | null = null;
   isFacturaVisible: boolean = false;
@@ -138,11 +145,17 @@ export class HomeUserComponent implements OnInit {
     private messageService: MessageService,
     public authService: AuthService,
     private router: Router,
-    private ventaService: VentaService
+    private ventaService: VentaService,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
     this.getAllProductos();
+
+    this.cartService.cart$.subscribe(items => {
+      this.carrito = items;
+      this.calculateTotal();
+    });
 
     this.responsiveOptions = [
       {
@@ -191,21 +204,11 @@ export class HomeUserComponent implements OnInit {
   }
 
   getCantidadTotalCarrito(): number {
-    return this.carrito.reduce((total, item) => total + item.cantidad, 0);
+    return this.cartService.getTotalItems();
   }
 
   addToCart(producto: Producto): void {
-    // stock validation removed
-
-    const item = this.carrito.find((p) => p.producto.id === producto.id);
-
-    if (item) {
-      item.cantidad += 1;
-    } else {
-      this.carrito.push({ producto, cantidad: 1 });
-    }
-
-    this.calculateTotal();
+    this.cartService.addToCart(producto);
 
     this.messageService.add({
       severity: 'success',
@@ -214,9 +217,8 @@ export class HomeUserComponent implements OnInit {
     });
   }
 
-  removeFromCart(item: { producto: Producto; cantidad: number }): void {
-    this.carrito = this.carrito.filter((p) => p.producto.id !== item.producto.id);
-    this.calculateTotal();
+  removeFromCart(item: CartItem): void {
+    this.cartService.removeFromCart(item.producto.id);
 
     this.messageService.add({
       severity: 'info',
@@ -226,10 +228,11 @@ export class HomeUserComponent implements OnInit {
   }
 
   calculateTotal(): void {
-    this.totalAmount = this.carrito.reduce(
-      (total, item) => total + item.producto.precioUnitario * item.cantidad,
-      0
-    );
+    this.totalAmount = this.cartService.getTotalAmount();
+  }
+
+  updateCartQuantity(item: CartItem): void {
+    this.cartService.updateQuantity(item.producto.id, item.cantidad);
   }
 
   checkout(): void {
@@ -244,12 +247,12 @@ export class HomeUserComponent implements OnInit {
 
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({
-        severity: 'warn',
+        severity: 'info',
         summary: 'Sesión requerida',
         detail: 'Inicia sesión para continuar con el pedido'
       });
 
-      this.router.navigate(['/login']);
+      this.loginVisible = true;
       return;
     }
 
@@ -270,8 +273,7 @@ export class HomeUserComponent implements OnInit {
         this.facturaGenerada = factura;
         this.isFacturaVisible = true;
 
-        this.carrito = [];
-        this.totalAmount = 0;
+        this.cartService.clearCart();
         this.cartVisible = false;
 
         this.getAllProductos();
@@ -303,13 +305,13 @@ export class HomeUserComponent implements OnInit {
   }
 
   filterProducto(event: AutoCompleteCompleteEvent): void {
-  const query = this.normalizarTexto(event.query);
+    const query = this.normalizarTexto(event.query);
 
-  this.filteredProductos = this.productos.filter((producto) =>
-    this.normalizarTexto(producto.nombre).includes(query) ||
-    this.normalizarTexto(producto.categoria).includes(query)
-  );
-}
+    this.filteredProductos = this.productos.filter((producto) =>
+      this.normalizarTexto(producto.nombre).includes(query) ||
+      this.normalizarTexto(producto.categoria).includes(query)
+    );
+  }
 
   onSelectProducto(event: any): void {
     const producto: Producto = event.value;
@@ -351,6 +353,44 @@ export class HomeUserComponent implements OnInit {
     });
 
     this.router.navigate(['/home-user']);
+  }
+
+  onModalLogin(): void {
+    if (!this.loginUsername || !this.loginPassword) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ambos campos son requeridos'
+      });
+      return;
+    }
+
+    this.loginLoading = true;
+    this.authService.authenticate({
+      username: this.loginUsername,
+      password: this.loginPassword
+    }).subscribe({
+      next: () => {
+        this.loginLoading = false;
+        this.loginVisible = false;
+        this.loginUsername = '';
+        this.loginPassword = '';
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sesión iniciada',
+          detail: 'Has iniciado sesión correctamente. Puedes continuar con el pago.'
+        });
+      },
+      error: (error) => {
+        this.loginLoading = false;
+        console.error('Error login modal:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Revise sus credenciales'
+        });
+      }
+    });
   }
 
   trackByIdProducto(index: number, producto: Producto): number {

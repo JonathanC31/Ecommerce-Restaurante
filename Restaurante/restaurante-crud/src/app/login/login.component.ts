@@ -1,10 +1,10 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../servicios/auth.service';
-import { Router, RouterOutlet, RouterModule } from '@angular/router';
+import { Router, RouterOutlet, RouterModule, ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +26,7 @@ import { FieldsetModule } from 'primeng/fieldset';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   username = '';
   password = '';
@@ -34,8 +34,34 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      if (token) {
+        this.authService.saveToken(token);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sesión iniciada',
+          detail: 'Has iniciado sesión con Google'
+        });
+        if (this.authService.isAdmin()) {
+          this.router.navigate(['/home']);
+        } else {
+          this.router.navigate(['/home-user']);
+        }
+      } else if (params['error']) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo iniciar sesión con Google'
+        });
+      }
+    });
+  }
 
   onLogin() {
   if (!this.username || !this.password) {
