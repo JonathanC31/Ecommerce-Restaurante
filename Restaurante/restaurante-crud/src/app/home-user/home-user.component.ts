@@ -126,32 +126,38 @@ export class HomeUserComponent implements OnInit {
     {
       id: 'Valenciano',
       titulo: 'Valenciano',
-      descripcion: 'Arroz chino sencillo con pollo asado o broaster.',
-      categoriaProducto: 'canasta'
+      descripcion: 'Arroz chino sencillo + 1 pollo + papa y ensalada.',
+      categoriaProducto: 'Valenciano'
     },
     {
       id: 'TodaslasCarnes',
       titulo: 'Todas las Carnes',
-      descripcion: 'Arroz chino con res, cerdo, pollo y jamón.',
-      categoriaProducto: 'Lacteo'
+      descripcion: 'Arroz con carnes de res, cerdo, pollo, jamón y camarón.',
+      categoriaProducto: 'Todas las Carnes'
     },
     {
       id: 'Paisa',
       titulo: 'Paisa',
-      descripcion: 'Arroz chino con carnes mixtas y acompañamientos especiales.',
-      categoriaProducto: 'Lacteo'
+      descripcion: 'Arroz con carne de res, cerdo, pollo, jamón, chicharrón y chorizo.',
+      categoriaProducto: 'Paisa'
+    },
+    {
+      id: 'Especiales',
+      titulo: 'Especiales',
+      descripcion: 'Platos con camarón, verduras, spaguettis y tortilla china.',
+      categoriaProducto: 'Especiales'
     },
     {
       id: 'Pollo',
       titulo: 'Pollo',
-      descripcion: 'Opciones con pollo para acompañar o armar tu pedido.',
-      categoriaProducto: 'pollo'
+      descripcion: 'Pollo brostead, asado y frito para acompañar tu pedido.',
+      categoriaProducto: 'Pollo'
     },
     {
-      id: 'ComidasRapidas',
-      titulo: 'Comidas rápidas',
-      descripcion: 'Opciones rápidas para pedir y disfrutar al momento.',
-      categoriaProducto: 'Comidas rápidas'
+      id: 'Bebidas',
+      titulo: 'Bebidas',
+      descripcion: 'Gaseosas, jugos y cervezas.',
+      categoriaProducto: 'Bebidas'
     }
   ];
 
