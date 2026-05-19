@@ -9,6 +9,10 @@ public record CrearVentaRequest(
         String clienteEmail,
         String clienteTelefono,
         String clienteDireccion,
+        String barrioEntrega,
+        String descripcionUbicacion,
+        String indicacionesEntrega,
+        String celularNequi,
         MetodoPago metodoPago,
         List<DetalleVentaRequest> items
 ) {

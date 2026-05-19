@@ -1,23 +1,93 @@
+:host {
+  display: block;
+}
+
 .inventario-form-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  max-width: 800px;
+  background: var(--color-surface, #FFFFFF);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 24px rgba(43, 30, 30, 0.04);
+  border: 1px solid var(--color-border, #E8D8C8);
+  max-width: 840px;
   margin: 0 auto;
 }
 
-h2 {
-  margin: 0;
-  color: #2c3e50;
+.form-header {
+  border-bottom: 1px solid var(--color-border, #E8D8C8);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0;
+    color: var(--color-text, #2B1E1E);
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
 }
 
 .field {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #495057;
+  font-weight: 700;
+  color: var(--color-muted, #6B5B5B);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Sobrescribir PrimeNG Inputs */
+:host ::ng-deep {
+  .p-inputtext,
+  .p-dropdown,
+  .p-inputnumber-input,
+  .p-calendar .p-inputtext {
+    border-radius: 12px;
+    border-color: #d8c9ba;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    color: #2b1e1e;
+    background: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .p-inputtext:enabled:focus,
+  .p-dropdown:not(.p-disabled).p-focus {
+    border-color: #9e1b1b;
+    box-shadow: 0 0 0 2px rgba(158, 27, 27, 0.1);
+  }
+
+  .p-dropdown-panel {
+    border-radius: 12px;
+    border: 1px solid #e8d8c8;
+    box-shadow: 0 8px 24px rgba(43, 30, 30, 0.12);
+  }
+
+  /* Botones redondeados */
+  .btn-submit {
+    background: #9e1b1b !important;
+    border-color: #9e1b1b !important;
+    color: #fff !important;
+    border-radius: 999px !important;
+    font-weight: 800;
+    padding: 0.75rem 2rem;
+
+    &:hover {
+      background: #6f1212 !important;
+      border-color: #6f1212 !important;
+    }
+  }
+
+  .btn-cancel {
+    color: #6b5b5b !important;
+    border-radius: 999px !important;
+    font-weight: 700;
+
+    &:hover {
+      background: rgba(107, 91, 91, 0.05) !important;
+      color: #2b1e1e !important;
+    }
+  }
 }

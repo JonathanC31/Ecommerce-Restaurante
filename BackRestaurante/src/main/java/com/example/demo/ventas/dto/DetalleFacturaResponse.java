@@ -4,6 +4,7 @@ public record DetalleFacturaResponse(
         String productoNombre,
         int cantidad,
         double precioUnitario,
-        double subtotal
+        double subtotal,
+        String especificaciones
 ) {
 }

@@ -1,6 +1,7 @@
 export interface DetalleVentaRequest {
   productoId: number;
   cantidad: number;
+  especificaciones?: string;
 }
 
 export interface CrearVentaRequest {
@@ -8,6 +9,9 @@ export interface CrearVentaRequest {
   clienteEmail: string;
   clienteTelefono: string;
   clienteDireccion: string;
+  barrioEntrega: string;
+  descripcionUbicacion: string;
+  indicacionesEntrega?: string;
   metodoPago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA';
   items: DetalleVentaRequest[];
 }
@@ -17,6 +21,7 @@ export interface DetalleFacturaResponse {
   cantidad: number;
   precioUnitario: number;
   subtotal: number;
+  especificaciones?: string;
 }
 
 export interface FacturaResponse {
@@ -32,5 +37,6 @@ export interface FacturaResponse {
   iva: number;
   total: number;
   estado: string;
+  checkoutUrl?: string;
   items: DetalleFacturaResponse[];
 }

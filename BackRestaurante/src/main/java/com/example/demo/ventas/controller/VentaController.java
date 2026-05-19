@@ -32,6 +32,23 @@ public class VentaController {
         return ResponseEntity.ok(ventaService.obtenerFacturaPorVenta(id));
     }
 
+    @PutMapping("/ventas/{id}/pago/estado")
+    public ResponseEntity<FacturaResponse> actualizarEstadoPago(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(ventaService.actualizarEstadoPago(id));
+    }
+
+    @GetMapping("/cocina/pedidos")
+    public ResponseEntity<List<FacturaResponse>> listarPedidosCocina() {
+        return ResponseEntity.ok(ventaService.listarPedidosCocina());
+    }
+
+    @PutMapping("/cocina/pedidos/{id}/entregado")
+    public ResponseEntity<FacturaResponse> marcarPedidoEntregado(@PathVariable Long id) {
+        return ResponseEntity.ok(ventaService.marcarPedidoEntregado(id));
+    }
+
     @GetMapping("/reportes/ventas")
     public ResponseEntity<List<VentaReporteResponse>> listarVentas() {
         return ResponseEntity.ok(ventaService.listarVentas());
@@ -45,5 +62,11 @@ public class VentaController {
     @GetMapping("/reportes/ventas/productos-mas-vendidos")
     public ResponseEntity<List<ProductoVendidoResponse>> productosMasVendidos() {
         return ResponseEntity.ok(ventaService.productosMasVendidos());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAllExceptions(Exception ex) {
+        ex.printStackTrace();
+        return ResponseEntity.status(500).body(ex.getMessage() + "\n" + java.util.Arrays.toString(ex.getStackTrace()));
     }
 }

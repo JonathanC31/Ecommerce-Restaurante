@@ -19,4 +19,16 @@ export class VentaService {
   obtenerFactura(ventaId: number): Observable<FacturaResponse> {
     return this.http.get<FacturaResponse>(`${this.apiUrl}/${ventaId}/factura`);
   }
+
+  actualizarEstadoPago(ventaId: number): Observable<FacturaResponse> {
+    return this.http.put<FacturaResponse>(`${this.apiUrl}/${ventaId}/pago/estado`, {});
+  }
+
+  getPedidosCocina(): Observable<FacturaResponse[]> {
+    return this.http.get<FacturaResponse[]>(`http://localhost:8080/api/cocina/pedidos`);
+  }
+
+  marcarPedidoEntregado(ventaId: number): Observable<FacturaResponse> {
+    return this.http.put<FacturaResponse>(`http://localhost:8080/api/cocina/pedidos/${ventaId}/entregado`, {});
+  }
 }

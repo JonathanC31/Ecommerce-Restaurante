@@ -1,0 +1,97 @@
+<p-toast></p-toast>
+
+<div class="receta-page p-4">
+  <div class="receta-header mb-5">
+    <a [routerLink]="['/home']" class="back-link">
+      <i class="pi pi-arrow-left mr-2"></i>Panel Admin
+    </a>
+    <h1 class="page-title mt-2">
+      <i class="pi pi-book mr-2"></i>Receta / Escandallo
+    </h1>
+    <p class="subtitle">
+      Producto: <strong>{{ productoNombre || ('ID ' + productoId) }}</strong>
+    </p>
+    <p class="hint">Define qué insumos y en qué cantidad se consumen por cada unidad vendida.</p>
+  </div>
+
+  <div class="receta-card" [formGroup]="form">
+    <div formArrayName="lineas">
+      <div *ngFor="let linea of lineas.controls; let i = index"
+           [formGroupName]="i"
+           class="linea-row mb-3">
+
+        <div class="linea-number">{{ i + 1 }}</div>
+
+        <div class="linea-fields p-fluid">
+          <div class="field">
+            <label class="field-label">Insumo *</label>
+            <p-dropdown
+              formControlName="inventarioItemId"
+              [options]="insumos"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecciona un insumo..."
+              [filter]="true"
+              filterPlaceholder="Buscar...">
+            </p-dropdown>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Cantidad por unidad *</label>
+            <div class="cantidad-wrapper">
+              <p-inputNumber
+                formControlName="cantidadUsada"
+                [minFractionDigits]="3"
+                [min]="0.001"
+                placeholder="Ej: 0.250"
+                styleClass="cantidad-input">
+              </p-inputNumber>
+              <span class="unidad-badge" *ngIf="getUnidadDeLinea(i)">
+                {{ getUnidadDeLinea(i) }}
+              </span>
+            </div>
+            <small class="unit-hint" *ngIf="getUnidadDeLinea(i)">
+              Ingresa la cantidad en <strong>{{ getUnidadDeLinea(i) }}</strong>.
+              Puedes usar decimales (ej: <em>0.125 Libra(s)</em> ≈ 1 porción de arroz).
+            </small>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Observación</label>
+            <input pInputText formControlName="observacion" placeholder="Ej: medido en kg" />
+          </div>
+        </div>
+
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [rounded]="true"
+          styleClass="linea-delete"
+          (onClick)="removeLinea(i)">
+        </p-button>
+      </div>
+    </div>
+
+    <div *ngIf="lineas.length === 0" class="empty-receta mb-4">
+      <i class="pi pi-info-circle mr-2"></i>
+      Sin ingredientes aún. Añade al menos uno para activar el escandallo.
+    </div>
+
+    <div class="flex gap-3 mt-4">
+      <p-button
+        label="+ Agregar ingrediente"
+        icon="pi pi-plus"
+        styleClass="p-button-outlined btn-add"
+        (onClick)="addLinea()">
+      </p-button>
+
+      <p-button
+        label="Guardar receta"
+        icon="pi pi-save"
+        styleClass="btn-save"
+        [loading]="loading"
+        (onClick)="save()">
+      </p-button>
+    </div>
+  </div>
+</div>

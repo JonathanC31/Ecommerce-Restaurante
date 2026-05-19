@@ -4,6 +4,10 @@
 <div class="sticky-toolbar">
     <div class="chow-toolbar-custom">
 
+        <div class="toolbar-brand">
+            <img src="/assets/images/logo.png" alt="Chow Yinn Logo" class="nav-logo" />
+        </div>
+
         <div class="toolbar-actions-left">
             <p-button
                 (onClick)="sidebarVisible = true"
@@ -76,8 +80,8 @@
 
     <div class="hero-card">
         <img
-            src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=900&q=80"
-            alt="Comida china servida en mesa" />
+            src="/assets/images/hero-bg.png"
+            alt="Especial Arroz Chino Colombiano Chow Yinn" />
 
         <div class="hero-badge">
             <span>Especial del día</span>
@@ -361,26 +365,37 @@
 <!-- Sidebar carrito -->
 <p-sidebar
     [(visible)]="cartVisible"
+    (onHide)="onCartHide()"
     position="right"
     [modal]="true"
     [baseZIndex]="10000"
     styleClass="cart-sidebar">
 
     <div class="cart-header">
-        <h3>Tu carrito</h3>
-        <p>Revisa tu pedido antes de pagar.</p>
+        <h3 *ngIf="checkoutStep === 'CART'">Tu carrito</h3>
+        <h3 *ngIf="checkoutStep !== 'CART'">Checkout</h3>
+        
+        <p *ngIf="checkoutStep === 'CART'">Revisa tu pedido antes de pagar.</p>
+        <p *ngIf="checkoutStep === 'SHIPPING'">Datos de envío (Domicilio Gratis)</p>
+        <p *ngIf="checkoutStep === 'PAYMENT'">Pago con Nequi</p>
+        <p *ngIf="checkoutStep === 'PROCESSING'">Esperando confirmación...</p>
     </div>
 
-    <div *ngIf="carrito.length > 0; else emptyCart">
+    <!-- CART STEP -->
+    <div *ngIf="checkoutStep === 'CART'">
+        <div *ngIf="carrito.length > 0; else emptyCart">
         <div *ngFor="let item of carrito" class="cart-item">
             <img
                 src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
-                alt="{{ item.producto.nombre }}"
+                [alt]="item.producto.nombre"
                 class="cart-img" />
 
             <div class="cart-info">
                 <h4>{{ item.producto.nombre }}</h4>
-                <!-- stock removed -->
+                <p>Cód: {{ item.producto.id }}</p>
+                <p *ngIf="item.especificaciones" class="text-xs text-orange-500 font-italic mt-1 mb-1">
+                  Nota: {{ item.especificaciones }}
+                </p>
 
                 <div class="cart-quantity">
                     <span>Cantidad:</span>
@@ -420,8 +435,8 @@
         </div>
 
         <p-button
-            label="Pagar pedido"
-            icon="pi pi-credit-card"
+            label="Proceder al checkout"
+            icon="pi pi-arrow-right"
             styleClass="checkout-button w-full mt-3"
             (onClick)="checkout()">
         </p-button>
@@ -433,6 +448,82 @@
             <p>Su carrito está vacío</p>
         </div>
     </ng-template>
+    </div>
+
+    <!-- SHIPPING STEP -->
+    <div *ngIf="checkoutStep === 'SHIPPING'" [formGroup]="checkoutFormGroup" class="p-fluid">
+        <div class="field mb-3">
+            <label for="telefonoContacto" class="font-medium">Teléfono (Obligatorio)</label>
+            <input pInputText id="telefonoContacto" formControlName="telefonoContacto" />
+        </div>
+        <div class="field mb-3">
+            <label for="barrioEntrega" class="font-medium">Barrio (Obligatorio)</label>
+            <input pInputText id="barrioEntrega" formControlName="barrioEntrega" />
+        </div>
+        <div class="field mb-3">
+            <label for="descripcionUbicacion" class="font-medium">Ubicación exacta (Obligatorio)</label>
+            <input pInputText id="descripcionUbicacion" formControlName="descripcionUbicacion" placeholder="Ej: Casa azul de dos pisos" />
+        </div>
+        <div class="field mb-3">
+            <label for="direccionEntrega" class="font-medium">Dirección (Opcional)</label>
+            <input pInputText id="direccionEntrega" formControlName="direccionEntrega" />
+        </div>
+        <div class="field mb-4">
+            <label for="indicacionesEntrega" class="font-medium">Indicaciones (Opcional)</label>
+            <input pInputText id="indicacionesEntrega" formControlName="indicacionesEntrega" placeholder="Ej: Dejar en portería" />
+        </div>
+
+        <div class="flex gap-2">
+            <p-button label="Volver" icon="pi pi-arrow-left" styleClass="p-button-outlined w-full" (onClick)="cancelCheckout()"></p-button>
+            <p-button label="Continuar" icon="pi pi-arrow-right" styleClass="w-full" (onClick)="goToPayment()"></p-button>
+        </div>
+    </div>
+
+    <!-- PAYMENT STEP -->
+    <div *ngIf="checkoutStep === 'PAYMENT'" class="p-fluid">
+        <h3 class="text-center font-bold mb-4" style="color: #2b1e1e;">Elige cómo pagar</h3>
+
+        <div class="metodo-grid mb-4">
+            <div class="metodo-card" [class.selected]="selectedMetodoPago === 'TARJETA'" (click)="selectedMetodoPago = 'TARJETA'">
+                <i class="pi pi-credit-card" style="font-size: 2rem;"></i>
+                <span>Tarjeta / MercadoPago</span>
+                <small>Crédito, débito, PSE</small>
+            </div>
+            <div class="metodo-card" [class.selected]="selectedMetodoPago === 'EFECTIVO'" (click)="selectedMetodoPago = 'EFECTIVO'">
+                <i class="pi pi-money-bill" style="font-size: 2rem;"></i>
+                <span>Efectivo</span>
+                <small>Pago al recibir</small>
+            </div>
+            <div class="metodo-card" [class.selected]="selectedMetodoPago === 'TRANSFERENCIA'" (click)="selectedMetodoPago = 'TRANSFERENCIA'">
+                <i class="pi pi-send" style="font-size: 2rem;"></i>
+                <span>Transferencia</span>
+                <small>Nequi, Daviplata, etc.</small>
+            </div>
+        </div>
+
+        <div *ngIf="selectedMetodoPago === 'TARJETA'" class="mp-info mb-3">
+            <i class="pi pi-info-circle mr-2"></i>
+            Se abrirá la pasarela de MercadoPago en una nueva pestaña. Regresa aquí tras completar el pago.
+        </div>
+        <div *ngIf="selectedMetodoPago !== 'TARJETA'" class="mp-info mp-info-cash mb-3">
+            <i class="pi pi-check-circle mr-2"></i>
+            Tu pedido entrará a cocina de inmediato. El pago se recibe al entregar.
+        </div>
+
+        <div class="flex gap-2">
+            <p-button label="Volver a envío" icon="pi pi-arrow-left" styleClass="p-button-outlined w-full" (onClick)="checkoutStep = 'SHIPPING'"></p-button>
+            <p-button label="Confirmar pedido" icon="pi pi-check" styleClass="w-full" (onClick)="processPayment()"></p-button>
+        </div>
+    </div>
+
+    <!-- PROCESSING STEP -->
+    <div *ngIf="checkoutStep === 'PROCESSING'" class="text-center py-6">
+        <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--primary-color);"></i>
+        <h3 class="mt-4">Procesando tu pedido...</h3>
+        <p class="text-700" *ngIf="selectedMetodoPago === 'TARJETA'">Completa el pago en la pestaña de MercadoPago que se abrió.</p>
+        <p class="text-700" *ngIf="selectedMetodoPago !== 'TARJETA'">Tu pedido está siendo enviado a cocina.</p>
+        <p class="text-sm text-500 mt-2">Esta pantalla se actualizará automáticamente.</p>
+    </div>
 </p-sidebar>
 
 <!-- Diálogo detalle de producto -->
@@ -460,19 +551,31 @@
                 <!-- stock removed -->
                 <p class="mt-2">Sin descripción disponible.</p>
 
-                <p-button
-                    icon="pi pi-arrow-left"
-                    (onClick)="isDialogVisible = false"
-                    class="ml-2"
-                    severity="danger">
-                </p-button>
+                <div class="field mt-3 mb-4 text-left">
+                    <label for="especificaciones" class="font-medium text-sm text-700 block mb-2">Especificaciones (Opcional)</label>
+                    <textarea 
+                        id="especificaciones" 
+                        pInputTextarea 
+                        [(ngModel)]="especificacionesActual" 
+                        rows="3" 
+                        class="w-full"
+                        placeholder="Ej: Amarillo, sin raíces chinas, sin camarón..." 
+                        style="resize: none; border-radius: 12px;"></textarea>
+                </div>
 
-                <p-button
-                    label="Añadir"
-                    icon="pi pi-cart-plus"
-                    (onClick)="addToCart(selectedProducto)"
-                    class="ml-2">
-                </p-button>
+                <div class="flex gap-2 justify-content-center">
+                    <p-button
+                        icon="pi pi-arrow-left"
+                        (onClick)="isDialogVisible = false"
+                        severity="danger">
+                    </p-button>
+
+                    <p-button
+                        label="Añadir"
+                        icon="pi pi-cart-plus"
+                        (onClick)="addToCart(selectedProducto, especificacionesActual)">
+                    </p-button>
+                </div>
             </div>
         </div>
     </ng-container>
@@ -653,3 +756,42 @@
         </a>
     </div>
 </p-dialog>
+
+<footer class="home-footer">
+    <div class="footer-inner">
+        <div class="footer-brand-block">
+            <img src="/assets/images/logo.png" alt="Chow Yinn Logo" class="footer-logo-img" />
+            <p class="footer-tagline">Auténtica cocina oriental · Algeciras, Huila</p>
+        </div>
+
+        <div class="footer-details">
+            <div class="footer-detail-item">
+                <i class="pi pi-map-marker"></i>
+                <span>Calle 5 #4-07 Centro, Algeciras, Huila</span>
+            </div>
+            <div class="footer-detail-item">
+                <i class="pi pi-phone"></i>
+                <span>Domicilios: <strong>313 811 7136</strong></span>
+            </div>
+            <div class="footer-detail-item">
+                <i class="pi pi-clock"></i>
+                <span>Lun–Sáb: 11:00 am – 10:00 pm</span>
+            </div>
+        </div>
+
+        <div class="footer-social">
+            <a href="#" class="social-link" title="Instagram">
+                <i class="pi pi-instagram"></i>
+            </a>
+            <a href="https://wa.me/573138117136" target="_blank" class="social-link social-wa" title="WhatsApp">
+                <i class="pi pi-whatsapp"></i>
+            </a>
+            <a href="https://www.facebook.com/" target="_blank" class="social-link social-fb" title="Facebook">
+                <i class="pi pi-facebook"></i>
+            </a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2024 Chow Yinn · Todos los derechos reservados.</span>
+    </div>
+</footer>

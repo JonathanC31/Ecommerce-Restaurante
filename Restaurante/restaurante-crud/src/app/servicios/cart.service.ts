@@ -5,6 +5,7 @@ import { Producto } from '../modelos/producto';
 export interface CartItem {
   producto: Producto;
   cantidad: number;
+  especificaciones?: string;
 }
 
 @Injectable({
@@ -39,20 +40,20 @@ export class CartService {
     return this.cart.getValue();
   }
 
-  addToCart(producto: Producto): void {
+  addToCart(producto: Producto, especificaciones?: string): void {
     const items = this.getCartItems();
-    const existing = items.find(item => item.producto.id === producto.id);
+    const existing = items.find(item => item.producto.id === producto.id && item.especificaciones === especificaciones);
 
     if (existing) {
       existing.cantidad += 1;
     } else {
-      items.push({ producto, cantidad: 1 });
+      items.push({ producto, cantidad: 1, especificaciones });
     }
     this.saveCartToStorage(items);
   }
 
-  removeFromCart(productoId: number): void {
-    const items = this.getCartItems().filter(item => item.producto.id !== productoId);
+  removeFromCart(productoId: number, especificaciones?: string): void {
+    const items = this.getCartItems().filter(item => !(item.producto.id === productoId && item.especificaciones === especificaciones));
     this.saveCartToStorage(items);
   }
 

@@ -1,0 +1,179 @@
+.cocina-container {
+    background: #fff8f0;
+    min-height: 100vh;
+}
+
+.brand-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #9e1b1b;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    color: #6b5b5b;
+    font-weight: 600;
+}
+
+.pedido-card {
+    background: #ffffff;
+    border: 2px solid #e8d8c8;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(43, 30, 30, 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        border-color: #d8a03d;
+    }
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px dashed #e8d8c8;
+    padding-bottom: 1rem;
+}
+
+.order-number {
+    font-weight: 900;
+    color: #2b1e1e;
+    font-size: 1.2rem;
+}
+
+.order-time {
+    background: #f7eadc;
+    color: #9e1b1b;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.item-name {
+    color: #2b1e1e;
+    font-size: 1.1rem;
+}
+
+.item-specs {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    padding: 0.5rem;
+    background: #fff8f0;
+    border-radius: 0.5rem;
+    border-left: 3px solid #9e1b1b;
+}
+
+.btn-done {
+    background: #2f7d4e !important;
+    border-color: #2f7d4e !important;
+    border-radius: 1rem !important;
+    font-weight: 800 !important;
+    padding: 1rem !important;
+
+    &:hover {
+        background: #24633d !important;
+    }
+}
+
+.empty-state {
+    h3 {
+        color: #2b1e1e;
+        font-weight: 800;
+        font-size: 1.5rem;
+    }
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #9e1b1b;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 2px solid #e8d8c8;
+    border-radius: 999px;
+    background: #ffffff;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #9e1b1b;
+        color: #ffffff;
+        border-color: #9e1b1b;
+    }
+
+    i { font-size: 0.85rem; }
+}
+
+.cocina-footer {
+    background: #2b1e1e;
+    color: #e8d8c8;
+    padding: 2.5rem 2rem;
+    margin-top: 3rem;
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .footer-brand {
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #d8a03d;
+            letter-spacing: 2px;
+        }
+        p {
+            margin: 0.25rem 0 0;
+            font-size: 0.85rem;
+            color: #b8a898;
+        }
+    }
+
+    .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+
+        span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #c8b8a8;
+        }
+
+        i { color: #d8a03d; }
+    }
+
+    .footer-rights {
+        font-size: 0.8rem;
+        color: #7a6a5a;
+        text-align: right;
+        p { margin: 0; }
+    }
+}
