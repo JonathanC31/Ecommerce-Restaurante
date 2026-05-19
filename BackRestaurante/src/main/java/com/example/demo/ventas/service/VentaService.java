@@ -1,11 +1,13 @@
 package com.example.demo.ventas.service;
 
+import com.example.demo.receta.service.RecetaService;
 import com.example.demo.model.entity.Producto;
 import com.example.demo.model.repository.IProductosRepository;
 import com.example.demo.ventas.dto.*;
 import com.example.demo.ventas.entity.*;
 import com.example.demo.ventas.repository.DetalleVentaRepository;
 import com.example.demo.ventas.repository.FacturaRepository;
+import com.example.demo.ventas.repository.PagoRepository;
 import com.example.demo.ventas.repository.VentaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,17 +26,26 @@ public class VentaService {
     private final FacturaRepository facturaRepository;
     private final DetalleVentaRepository detalleVentaRepository;
     private final IProductosRepository productosRepository;
+    private final MercadoPagoService mercadoPagoService;
+    private final PagoRepository pagoRepository;
+    private final RecetaService recetaService;
 
     public VentaService(
             VentaRepository ventaRepository,
             FacturaRepository facturaRepository,
             DetalleVentaRepository detalleVentaRepository,
-            IProductosRepository productosRepository
+            IProductosRepository productosRepository,
+            MercadoPagoService mercadoPagoService,
+            PagoRepository pagoRepository,
+            RecetaService recetaService
     ) {
         this.ventaRepository = ventaRepository;
         this.facturaRepository = facturaRepository;
         this.detalleVentaRepository = detalleVentaRepository;
         this.productosRepository = productosRepository;
+        this.mercadoPagoService = mercadoPagoService;
+        this.pagoRepository = pagoRepository;
+        this.recetaService = recetaService;
     }
 
     @Transactional
@@ -50,7 +61,13 @@ public class VentaService {
         venta.setClienteTelefono(request.clienteTelefono());
         venta.setClienteDireccion(request.clienteDireccion());
         venta.setMetodoPago(request.metodoPago() != null ? request.metodoPago() : MetodoPago.EFECTIVO);
-        venta.setEstado(EstadoVenta.PAGADA);
+        venta.setEstado(EstadoVenta.PENDIENTE);
+
+        DatosEntrega datosEntrega = new DatosEntrega();
+        datosEntrega.setBarrioEntrega(request.barrioEntrega());
+        datosEntrega.setDescripcionUbicacion(request.descripcionUbicacion());
+        datosEntrega.setIndicacionesEntrega(request.indicacionesEntrega());
+        venta.setDatosEntrega(datosEntrega);
 
         double subtotalVenta = 0;
 
@@ -73,6 +90,7 @@ public class VentaService {
             detalle.setPrecioUnitario(producto.getPrecioUnitario());
             detalle.setCantidad(item.cantidad());
             detalle.setSubtotal(subtotalDetalle);
+            detalle.setEspecificaciones(item.especificaciones());
 
             venta.addDetalle(detalle);
 
@@ -86,28 +104,138 @@ public class VentaService {
         venta.setIva(iva);
         venta.setTotal(total);
 
-        Factura factura = new Factura();
-        factura.setFechaEmision(LocalDateTime.now());
-        factura.setSubtotal(subtotalVenta);
-        factura.setIva(iva);
-        factura.setTotal(total);
-        factura.setEstado("PAGADA");
-
-        venta.setFactura(factura);
-
         Venta ventaGuardada = ventaRepository.save(venta);
 
-        factura.setNumeroFactura(generarNumeroFactura(ventaGuardada.getId()));
-        ventaGuardada.getFactura().setNumeroFactura(factura.getNumeroFactura());
+        if (ventaGuardada.getMetodoPago() == MetodoPago.TARJETA) {
+            String referencia = "VENTA-" + ventaGuardada.getId() + "-" + System.currentTimeMillis();
 
-        Venta ventaActualizada = ventaRepository.save(ventaGuardada);
+            String descripcion = ventaGuardada.getDetalles().stream()
+                    .map(d -> d.getCantidad() + "x " + d.getNombreProducto())
+                    .reduce((a, b) -> a + ", " + b)
+                    .orElse("Pedido Chow Yinn");
 
-        return mapFacturaResponse(ventaActualizada);
+            java.util.Map<String, String> mpResult = mercadoPagoService.crearPreferencia(
+                    ventaGuardada.getTotal(),
+                    referencia,
+                    ventaGuardada.getClienteEmail(),
+                    descripcion
+            );
+
+            Pago pago = new Pago();
+            pago.setTransaccionId(mpResult.get("preferenceId"));
+            pago.setMonto(ventaGuardada.getTotal());
+            pago.setEstadoPago("PENDING");
+            pago.setMetodo("MERCADOPAGO");
+            pago.setReferencia(referencia);
+            pago.setCelularNequi(mpResult.get("checkoutUrl")); // reuse field to pass URL
+            pago.setFechaCreacion(LocalDateTime.now());
+
+            ventaGuardada.addPago(pago);
+            ventaGuardada = ventaRepository.save(ventaGuardada);
+        } else if (ventaGuardada.getMetodoPago() != MetodoPago.TARJETA) {
+            ventaGuardada.setEstado(EstadoVenta.PREPARANDO);
+            
+            Factura factura = new Factura();
+            factura.setFechaEmision(LocalDateTime.now());
+            factura.setSubtotal(ventaGuardada.getSubtotal());
+            factura.setIva(ventaGuardada.getIva());
+            factura.setTotal(ventaGuardada.getTotal());
+            factura.setEstado("PAGADA");
+            
+            ventaGuardada.setFactura(factura);
+            Venta ventaG = ventaRepository.save(ventaGuardada);
+            
+            factura.setNumeroFactura(generarNumeroFactura(ventaG.getId()));
+            ventaG.getFactura().setNumeroFactura(factura.getNumeroFactura());
+            
+            ventaGuardada = ventaRepository.save(ventaG);
+
+            // Debit inventory via recipe (escandallo)
+            for (DetalleVenta detalle : ventaGuardada.getDetalles()) {
+                recetaService.debitarInventarioPorVenta(detalle.getProducto().getId(), detalle.getCantidad());
+            }
+        }
+
+        return mapFacturaResponse(ventaGuardada);
     }
 
     public FacturaResponse obtenerFacturaPorVenta(Long ventaId) {
         Venta venta = ventaRepository.findById(ventaId)
                 .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+
+        return mapFacturaResponse(venta);
+    }
+
+    @Transactional
+    public FacturaResponse actualizarEstadoPago(Long ventaId) {
+        Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+
+        if (venta.getEstado() == EstadoVenta.PREPARANDO || venta.getEstado() == EstadoVenta.PAGADA) {
+            return mapFacturaResponse(venta);
+        }
+
+        Pago ultimoPago = venta.getPagos().stream()
+                .filter(p -> "PENDING".equals(p.getEstadoPago()))
+                .findFirst()
+                .orElse(null);
+
+        if (ultimoPago != null && ultimoPago.getReferencia() != null) {
+            String nuevoEstado = mercadoPagoService.consultarEstadoPorReferencia(ultimoPago.getReferencia());
+            ultimoPago.setEstadoPago(nuevoEstado);
+            ultimoPago.setFechaActualizacion(LocalDateTime.now());
+
+            if ("APPROVED".equals(nuevoEstado)) {
+                venta.setEstado(EstadoVenta.PREPARANDO);
+                
+                Factura factura = new Factura();
+                factura.setFechaEmision(LocalDateTime.now());
+                factura.setSubtotal(venta.getSubtotal());
+                factura.setIva(venta.getIva());
+                factura.setTotal(venta.getTotal());
+                factura.setEstado("PAGADA");
+                
+                venta.setFactura(factura);
+                Venta ventaG = ventaRepository.save(venta);
+                
+                factura.setNumeroFactura(generarNumeroFactura(ventaG.getId()));
+                ventaG.getFactura().setNumeroFactura(factura.getNumeroFactura());
+                
+                venta = ventaRepository.save(ventaG);
+
+                // Debit inventory via recipe (escandallo)
+                for (DetalleVenta detalle : venta.getDetalles()) {
+                    recetaService.debitarInventarioPorVenta(detalle.getProducto().getId(), detalle.getCantidad());
+                }
+            } else if ("REJECTED".equals(nuevoEstado) || "ERROR".equals(nuevoEstado)) {
+                venta.setEstado(EstadoVenta.RECHAZADA);
+                venta = ventaRepository.save(venta);
+            } else {
+                pagoRepository.save(ultimoPago);
+            }
+        }
+
+        return mapFacturaResponse(venta);
+    }
+
+    public List<FacturaResponse> listarPedidosCocina() {
+        return ventaRepository.findAll()
+                .stream()
+                .filter(v -> v.getEstado() == EstadoVenta.PREPARANDO)
+                .sorted(Comparator.comparing(Venta::getFecha))
+                .map(this::mapFacturaResponse)
+                .toList();
+    }
+
+    @Transactional
+    public FacturaResponse marcarPedidoEntregado(Long ventaId) {
+        Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+
+        if (venta.getEstado() == EstadoVenta.PREPARANDO) {
+            venta.setEstado(EstadoVenta.ENTREGADO);
+            venta = ventaRepository.save(venta);
+        }
 
         return mapFacturaResponse(venta);
     }
@@ -179,9 +307,16 @@ public class VentaService {
     }
 
     private FacturaResponse mapFacturaResponse(Venta venta) {
+        String checkoutUrl = venta.getPagos().stream()
+                .filter(p -> "PENDING".equals(p.getEstadoPago()) && p.getCelularNequi() != null
+                        && p.getCelularNequi().startsWith("https"))
+                .map(Pago::getCelularNequi)
+                .findFirst()
+                .orElse(null);
+
         return new FacturaResponse(
                 venta.getId(),
-                venta.getFactura().getNumeroFactura(),
+                venta.getFactura() != null ? venta.getFactura().getNumeroFactura() : null,
                 venta.getFecha(),
                 venta.getClienteNombre(),
                 venta.getClienteEmail(),
@@ -192,13 +327,15 @@ public class VentaService {
                 venta.getIva(),
                 venta.getTotal(),
                 venta.getEstado().name(),
+                checkoutUrl,
                 venta.getDetalles()
                         .stream()
                         .map(detalle -> new DetalleFacturaResponse(
                                 detalle.getNombreProducto(),
                                 detalle.getCantidad(),
                                 detalle.getPrecioUnitario(),
-                                detalle.getSubtotal()
+                                detalle.getSubtotal(),
+                                detalle.getEspecificaciones()
                         ))
                         .toList()
         );

@@ -47,6 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // Ventas: público (clientes sin cuenta pueden comprar y consultar estado)
+        if (path.startsWith("/api/ventas")) {
+            return true;
+        }
+
         return false;
     }
 

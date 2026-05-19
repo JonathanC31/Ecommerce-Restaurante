@@ -14,6 +14,9 @@ import { ReportesFacturacionComponent } from './reportes/reportes-facturacion/re
 import { ReportesContabilidadComponent } from './reportes/reportes-contabilidad/reportes-contabilidad.component';
 import { ReportesInventarioComponent } from './reportes/reportes-inventario/reportes-inventario.component';
 import { ReportesVencimientosComponent } from './reportes/reportes-vencimientos/reportes-vencimientos.component';
+import { CocinaComponent } from './cocina/cocina.component';
+import { RecetaFormComponent } from './recetas/receta-form/receta-form.component';
+
 export const routes: Routes = [
   {
     path: 'home-user',
@@ -73,9 +76,27 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
   {
-    path: 'inventario/form/:id',
+    path: 'inventario/nuevo',
     component: InventarioFormComponent,
-    title: 'Materia Prima',
+    title: 'Nueva Materia Prima',
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'inventario/editar/:id',
+    component: InventarioFormComponent,
+    title: 'Editar Materia Prima',
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'cocina',
+    component: CocinaComponent,
+    title: 'Cocina - Chow Yinn',
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'recetas/producto/:productoId',
+    component: RecetaFormComponent,
+    title: 'Gestionar Receta - Chow Yinn',
     canActivate: [adminGuard]
   },
   {

@@ -1,0 +1,133 @@
+.receta-page {
+  background: #fff8f0;
+  min-height: 100vh;
+}
+
+.back-link {
+  color: #9e1b1b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+
+  &:hover { text-decoration: underline; }
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #2b1e1e;
+}
+
+.subtitle { color: #6b5b5b; font-size: 1rem; }
+.hint { color: #a08070; font-size: 0.85rem; }
+
+.receta-card {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(43, 30, 30, 0.08);
+  border: 1.5px solid #e8d8c8;
+  max-width: 900px;
+}
+
+.linea-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  background: #fff8f0;
+  border: 1px solid #e8d8c8;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.linea-number {
+  background: #9e1b1b;
+  color: #fff;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.linea-fields {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  flex-wrap: wrap;
+
+  .field {
+    flex: 1;
+    min-width: 180px;
+  }
+}
+
+.cantidad-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  ::ng-deep .cantidad-input {
+    flex: 1;
+  }
+}
+
+.unidad-badge {
+  background: #2b1e1e;
+  color: #fff;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.unit-hint {
+  display: block;
+  margin-top: 0.4rem;
+  color: #a08070;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.field-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #6b5b5b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.linea-delete {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.empty-receta {
+  padding: 1rem;
+  background: #fff3cd;
+  border-radius: 0.75rem;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.btn-add {
+  border-color: #2b1e1e !important;
+  color: #2b1e1e !important;
+}
+
+.btn-save {
+  background: #9e1b1b !important;
+  border-color: #9e1b1b !important;
+  border-radius: 0.75rem !important;
+  font-weight: 700 !important;
+}

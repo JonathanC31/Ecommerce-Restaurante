@@ -16,6 +16,7 @@ public record FacturaResponse(
         double iva,
         double total,
         String estado,
+        String checkoutUrl,
         List<DetalleFacturaResponse> items
 ) {
 }

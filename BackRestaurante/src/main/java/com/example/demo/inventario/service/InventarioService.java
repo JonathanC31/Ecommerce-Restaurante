@@ -6,6 +6,7 @@ import com.example.demo.inventario.entity.MovimientoInventario;
 import com.example.demo.inventario.entity.TipoMovimientoInventario;
 import com.example.demo.inventario.repository.InventarioItemRepository;
 import com.example.demo.inventario.repository.MovimientoInventarioRepository;
+import com.example.demo.contabilidad.service.ContabilidadService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,14 @@ public class InventarioService {
 
     private final InventarioItemRepository itemRepository;
     private final MovimientoInventarioRepository movimientoRepository;
+    private final ContabilidadService contabilidadService;
 
-    public InventarioService(InventarioItemRepository itemRepository, MovimientoInventarioRepository movimientoRepository) {
+    public InventarioService(InventarioItemRepository itemRepository, 
+                            MovimientoInventarioRepository movimientoRepository,
+                            ContabilidadService contabilidadService) {
         this.itemRepository = itemRepository;
         this.movimientoRepository = movimientoRepository;
+        this.contabilidadService = contabilidadService;
     }
 
     public List<InventarioItemResponse> findAll() {
@@ -40,7 +45,19 @@ public class InventarioService {
     public InventarioItemResponse create(InventarioItemRequest request) {
         InventarioItem item = new InventarioItem();
         updateItemFromRequest(item, request);
-        return mapToResponse(itemRepository.save(item));
+        InventarioItem savedItem = itemRepository.save(item);
+        
+        if (savedItem.getCantidadDisponible() > 0) {
+            double total = savedItem.getCantidadDisponible() * savedItem.getCostoUnitario();
+            contabilidadService.registrarEgreso(
+                "Compra inicial: " + savedItem.getNombre(),
+                total,
+                "COMPRA_INSUMOS",
+                savedItem.getId()
+            );
+        }
+        
+        return mapToResponse(savedItem);
     }
 
     @Transactional
@@ -98,6 +115,16 @@ public class InventarioService {
         movimiento.setFecha(LocalDateTime.now());
 
         movimiento = movimientoRepository.save(movimiento);
+
+        if (request.tipo() == TipoMovimientoInventario.ENTRADA) {
+            double total = request.cantidad() * item.getCostoUnitario();
+            contabilidadService.registrarEgreso(
+                "Entrada de almacén: " + item.getNombre(),
+                total,
+                "COMPRA_INSUMOS",
+                movimiento.getId()
+            );
+        }
 
         return mapToMovimientoResponse(movimiento);
     }

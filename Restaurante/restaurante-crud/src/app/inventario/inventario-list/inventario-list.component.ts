@@ -40,7 +40,22 @@ import { InventarioItemResponse, MovimientoInventarioRequest, TipoMovimientoInve
 })
 export class InventarioListComponent implements OnInit {
   items: InventarioItemResponse[] = [];
+  itemsFiltrados: InventarioItemResponse[] = [];
   loading: boolean = true;
+
+  categoriaActiva: string = 'TODAS';
+
+  categorias = [
+    { label: 'Todas', value: 'TODAS', icon: '📊' },
+    { label: 'Carnes', value: 'CARNES', icon: '🥩' },
+    { label: 'Granos', value: 'GRANOS', icon: '🌾' },
+    { label: 'Aseo', value: 'ASEO', icon: '🧿' },
+    { label: 'Lácteos', value: 'LACTEOS', icon: '🥛' },
+    { label: 'Verduras', value: 'VERDURAS', icon: '🥦' },
+    { label: 'Condimentos', value: 'CONDIMENTOS', icon: '🌶️' },
+    { label: 'Bebidas', value: 'BEBIDAS', icon: '🍹' },
+    { label: 'Otros', value: 'OTROS', icon: '📦' },
+  ];
 
   // Modal de Movimiento
   displayMovimiento: boolean = false;
@@ -75,6 +90,7 @@ export class InventarioListComponent implements OnInit {
     this.inventarioService.getAll().subscribe({
       next: (data) => {
         this.items = data;
+        this.filtrarCategoria(this.categoriaActiva);
         this.loading = false;
       },
       error: (err) => {
@@ -82,6 +98,17 @@ export class InventarioListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  filtrarCategoria(categoria: string) {
+    this.categoriaActiva = categoria;
+    if (categoria === 'TODAS') {
+      this.itemsFiltrados = this.items;
+    } else {
+      this.itemsFiltrados = this.items.filter(i =>
+        i.categoria?.toUpperCase() === categoria
+      );
+    }
   }
 
   deleteItem(id: number, event: Event) {

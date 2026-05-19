@@ -21,6 +21,9 @@ public class DetalleVenta {
     private double precioUnitario;
     private int cantidad;
     private double subtotal;
+    
+    @Column(length = 500)
+    private String especificaciones;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venta_id")

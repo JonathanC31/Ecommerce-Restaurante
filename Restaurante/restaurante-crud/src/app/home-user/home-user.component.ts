@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -21,6 +21,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { Producto } from '../modelos/producto';
 import { ProductoService } from '../servicios/producto.service';
@@ -69,7 +70,8 @@ interface CategoriaMenu {
     RippleModule,
     AvatarModule,
     StyleClassModule,
-    InputTextModule
+    InputTextModule,
+    InputTextareaModule
   ],
   templateUrl: './home-user.component.html',
   styleUrl: './home-user.component.scss'
@@ -88,6 +90,7 @@ export class HomeUserComponent implements OnInit {
   responsiveOptions: any[] | undefined;
 
   selectedProducto: Producto | null = null;
+  especificacionesActual: string = '';
   isDialogVisible: boolean = false;
 
   carrito: CartItem[] = [];
@@ -97,6 +100,20 @@ export class HomeUserComponent implements OnInit {
   loginUsername = '';
   loginPassword = '';
   loginLoading: boolean = false;
+
+  checkoutStep: 'CART' | 'SHIPPING' | 'PAYMENT' | 'PROCESSING' = 'CART';
+  currentVentaId: number | null = null;
+  pollingInterval: any;
+
+  checkoutFormGroup = new FormGroup({
+    telefonoContacto: new FormControl('', [Validators.required]),
+    barrioEntrega: new FormControl('', [Validators.required]),
+    descripcionUbicacion: new FormControl('', [Validators.required]),
+    direccionEntrega: new FormControl(''),
+    indicacionesEntrega: new FormControl(''),
+  });
+
+  selectedMetodoPago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' = 'TARJETA';
 
   facturaGenerada: FacturaResponse | null = null;
   isFacturaVisible: boolean = false;
@@ -207,18 +224,22 @@ export class HomeUserComponent implements OnInit {
     return this.cartService.getTotalItems();
   }
 
-  addToCart(producto: Producto): void {
-    this.cartService.addToCart(producto);
+  addToCart(producto: Producto, especificaciones?: string): void {
+    this.cartService.addToCart(producto, especificaciones);
 
     this.messageService.add({
       severity: 'success',
       summary: 'Añadido al pedido',
       detail: `${producto.nombre} fue agregado al carrito`
     });
+    
+    if (this.isDialogVisible) {
+      this.isDialogVisible = false;
+    }
   }
 
   removeFromCart(item: CartItem): void {
-    this.cartService.removeFromCart(item.producto.id);
+    this.cartService.removeFromCart(item.producto.id, item.especificaciones);
 
     this.messageService.add({
       severity: 'info',
@@ -256,44 +277,102 @@ export class HomeUserComponent implements OnInit {
       return;
     }
 
+    this.checkoutStep = 'SHIPPING';
+  }
+
+  cancelCheckout(): void {
+    this.checkoutStep = 'CART';
+  }
+
+  goToPayment(): void {
+    if (this.checkoutFormGroup.get('telefonoContacto')?.invalid ||
+        this.checkoutFormGroup.get('barrioEntrega')?.invalid ||
+        this.checkoutFormGroup.get('descripcionUbicacion')?.invalid) {
+      this.messageService.add({severity:'error', summary:'Error', detail:'Por favor completa los campos obligatorios'});
+      return;
+    }
+    this.checkoutStep = 'PAYMENT';
+  }
+
+  processPayment(): void {
+    this.checkoutStep = 'PROCESSING';
+    
+    const fValues = this.checkoutFormGroup.value;
     const request: CrearVentaRequest = {
       clienteNombre: 'Consumidor final',
       clienteEmail: '',
-      clienteTelefono: '',
-      clienteDireccion: '',
-      metodoPago: 'EFECTIVO',
+      clienteTelefono: fValues.telefonoContacto || '',
+      clienteDireccion: fValues.direccionEntrega || '',
+      barrioEntrega: fValues.barrioEntrega || '',
+      descripcionUbicacion: fValues.descripcionUbicacion || '',
+      indicacionesEntrega: fValues.indicacionesEntrega || '',
+      metodoPago: this.selectedMetodoPago,
       items: this.carrito.map(item => ({
         productoId: item.producto.id,
-        cantidad: item.cantidad
+        cantidad: item.cantidad,
+        especificaciones: item.especificaciones
       }))
     };
 
     this.ventaService.crearVenta(request).subscribe({
-      next: (factura) => {
-        this.facturaGenerada = factura;
-        this.isFacturaVisible = true;
-
-        this.cartService.clearCart();
-        this.cartVisible = false;
-
-        this.getAllProductos();
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Venta registrada',
-          detail: `Factura ${factura.numeroFactura} generada correctamente`
-        });
+      next: (response) => {
+        if (response.estado === 'PENDIENTE' && response.checkoutUrl) {
+          // Redirect to MercadoPago checkout
+          this.currentVentaId = response.ventaId;
+          window.open(response.checkoutUrl, '_blank');
+          this.startPolling();
+        } else if (response.estado === 'PENDIENTE') {
+          this.currentVentaId = response.ventaId;
+          this.startPolling();
+        } else {
+          this.handlePaymentSuccess(response);
+        }
       },
       error: (error) => {
         console.error('Error creando venta:', error);
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo completar la venta'
-        });
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo iniciar el pago'});
+        this.checkoutStep = 'PAYMENT';
       }
     });
+  }
+
+  startPolling(): void {
+    if (this.pollingInterval) clearInterval(this.pollingInterval);
+    
+    this.pollingInterval = setInterval(() => {
+      if (!this.currentVentaId) return;
+      
+      this.ventaService.actualizarEstadoPago(this.currentVentaId).subscribe({
+        next: (response) => {
+          if (response.estado === 'PREPARANDO' || response.estado === 'PAGADA') {
+            this.handlePaymentSuccess(response);
+          } else if (response.estado === 'RECHAZADA') {
+            clearInterval(this.pollingInterval);
+            this.messageService.add({severity: 'error', summary: 'Pago Rechazado', detail: 'El pago fue rechazado o cancelado.'});
+            this.checkoutStep = 'PAYMENT';
+          }
+        },
+        error: (err) => console.error('Error al hacer polling:', err)
+      });
+    }, 5000);
+  }
+
+  handlePaymentSuccess(factura: FacturaResponse): void {
+    if (this.pollingInterval) clearInterval(this.pollingInterval);
+    this.facturaGenerada = factura;
+    this.isFacturaVisible = true;
+    this.cartService.clearCart();
+    this.cartVisible = false;
+    this.checkoutStep = 'CART';
+    this.getAllProductos();
+    this.messageService.add({severity: 'success', summary: 'Venta registrada', detail: `Pago aprobado. Factura ${factura.numeroFactura} generada`});
+  }
+
+  onCartHide(): void {
+    this.checkoutStep = 'CART';
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   closeCallback(e: Event): void {
@@ -340,6 +419,7 @@ export class HomeUserComponent implements OnInit {
 
   openDialog(producto: Producto): void {
     this.selectedProducto = producto;
+    this.especificacionesActual = '';
     this.isDialogVisible = true;
   }
 

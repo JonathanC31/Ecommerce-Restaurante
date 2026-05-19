@@ -66,4 +66,69 @@
       &:hover > td { background: #FFF3E8; }
     }
   }
+
+  // Category tabs
+  .category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    border: 2px solid #E8D8C8;
+    background: #FFFFFF;
+    color: #6B5B5B;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+
+    .cat-icon { font-size: 1rem; }
+
+    &:hover {
+      border-color: #9E1B1B;
+      color: #9E1B1B;
+    }
+
+    &.active {
+      background: #9E1B1B;
+      border-color: #9E1B1B;
+      color: #ffffff;
+    }
+  }
+
+  .cat-label-active {
+    font-size: 13px;
+    color: #6B5B5B;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i { color: #9E1B1B; }
+    .cat-count { color: #9E1B1B; font-weight: 700; }
+  }
+
+  // Category badge chips in table
+  .cat-badge {
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #F0E8E0;
+    color: #5a4030;
+
+    &[data-cat="carnes"]       { background: #FDECEA; color: #9e1b1b; }
+    &[data-cat="granos"]       { background: #FFF8E1; color: #7c5e00; }
+    &[data-cat="aseo"]         { background: #E8F5E9; color: #2e7d32; }
+    &[data-cat="lacteos"]      { background: #E3F2FD; color: #1565c0; }
+    &[data-cat="verduras"]     { background: #E8F5E9; color: #388e3c; }
+    &[data-cat="condimentos"]  { background: #FFF3E0; color: #e65100; }
+    &[data-cat="bebidas"]      { background: #EDE7F6; color: #512da8; }
+    &[data-cat="otros"]        { background: #ECEFF1; color: #455a64; }
+  }
 }

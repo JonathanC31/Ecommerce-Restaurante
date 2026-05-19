@@ -57,6 +57,13 @@
         <p>Catálogo del menú</p>
       </div>
     </a>
+    <a routerLink="/cocina" class="module-card card-cocina">
+      <div class="card-icon"><i class="pi pi-fire"></i></div>
+      <div class="card-body">
+        <h3>Pantalla Cocina</h3>
+        <p>Comandas en tiempo real</p>
+      </div>
+    </a>
   </div>
 
   <!-- Productos Existentes -->
@@ -72,6 +79,7 @@
           <ng-template pTemplate="footer">
             <div class="flex gap-2 mt-2">
               <p-button label="Editar" icon="pi pi-pencil" routerLink="/producto-form/{{ producto.id }}" styleClass="p-button-sm p-button-info flex-1"></p-button>
+              <p-button label="Receta" icon="pi pi-book" routerLink="/recetas/producto/{{ producto.id }}" styleClass="p-button-sm p-button-warning flex-1"></p-button>
               <p-button icon="pi pi-trash" (onClick)="deleteProducto(producto.id!)" styleClass="p-button-sm p-button-danger p-button-text" pTooltip="Eliminar"></p-button>
             </div>
           </ng-template>

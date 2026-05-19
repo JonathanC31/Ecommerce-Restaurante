@@ -3,6 +3,7 @@ package com.example.demo.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,7 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -58,22 +61,32 @@ public class SecurityConfig {
                         // Preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                        // Errores de Spring Boot (rompe bucles de redirección)
+                        .requestMatchers("/error").permitAll()
+
+                        // Ventas: PÚBLICO (clientes sin cuenta pueden comprar y consultar estado)
+                        .requestMatchers(new AntPathRequestMatcher("/api/ventas/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/ventas")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/ventas", "POST")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/ventas/**", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/ventas/**", "PUT")).permitAll()
+
                         // Login y registro públicos
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // Productos: lectura pública
                         .requestMatchers(HttpMethod.GET, "/api/producto/**").permitAll()
 
+                        // Cocina: pública para pantalla de cocina sin login
+                        .requestMatchers("/api/cocina/**").hasAnyRole("USER", "ADMIN")
+
+                        // Recetas: solo ADMIN
+                        .requestMatchers("/api/recetas/**").hasRole("ADMIN")
+
                         // Productos: escritura solo ADMIN
                         .requestMatchers(HttpMethod.POST, "/api/producto/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/producto/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/producto/**").hasRole("ADMIN")
-
-                        // Ventas: usuarios autenticados pueden comprar
-                        .requestMatchers(HttpMethod.POST, "/api/ventas/**").hasAnyRole("USER", "ADMIN")
-
-                        // Facturas de ventas: usuario autenticado o admin
-                        .requestMatchers(HttpMethod.GET, "/api/ventas/**").hasAnyRole("USER", "ADMIN")
 
                         // Reportes e Inventario: solo ADMIN
                         .requestMatchers("/api/reportes/**").hasRole("ADMIN")
@@ -85,6 +98,14 @@ public class SecurityConfig {
 
                         // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
+                )
+
+                // For /api/** routes: return 401 instead of 302 OAuth2 redirect
+                .exceptionHandling(ex -> ex
+                        .defaultAuthenticationEntryPointFor(
+                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                                new AntPathRequestMatcher("/api/**")
+                        )
                 )
 
                 .oauth2Login(oauth2 -> oauth2
@@ -107,9 +128,9 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));
-        configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

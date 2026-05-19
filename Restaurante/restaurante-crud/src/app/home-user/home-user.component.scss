@@ -5,6 +5,71 @@
 }
 
 /* ============================= */
+/* Payment method selector       */
+/* ============================= */
+
+.metodo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.metodo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 0.5rem;
+  border: 2px solid #e8d8c8;
+  border-radius: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  background: #fff;
+
+  span {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #2b1e1e;
+  }
+
+  small {
+    font-size: 0.72rem;
+    color: #a08070;
+  }
+
+  i {
+    color: #9e1b1b;
+  }
+
+  &:hover {
+    border-color: #9e1b1b;
+    background: #fff8f0;
+  }
+
+  &.selected {
+    border-color: #9e1b1b;
+    background: #fff0e8;
+    box-shadow: 0 4px 12px rgba(158, 27, 27, 0.15);
+  }
+}
+
+.mp-info {
+  background: #e8f4fd;
+  border: 1px solid #b8d9f0;
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  color: #1a5276;
+
+  &.mp-info-cash {
+    background: #e8f8ef;
+    border-color: #a9dfbf;
+    color: #1e7e4a;
+  }
+}
+
+/* ============================= */
 /* Diálogo detalle producto */
 /* ============================= */
 
@@ -1029,6 +1094,7 @@
 }
 
 @media print {
+
   .sticky-toolbar,
   .hero-section,
   .highlights-section,
@@ -1088,6 +1154,7 @@
   border-radius: 999px;
   border: 2px solid #fff8f0;
 }
+
 :host ::ng-deep {
   .invoice-dialog {
     .p-dialog-header {
@@ -1433,5 +1500,205 @@
 
   .invoice-print-button {
     justify-content: center;
+  }
+}
+
+// =============================================
+// FOOTER HOME-USER
+// =============================================
+.home-footer {
+  background: #2b1e1e;
+  color: #e8d8c8;
+  padding: 3rem 2rem 0;
+  margin-top: 4rem;
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid #3d2c2c;
+  }
+
+  .footer-brand-block {
+    .footer-logo-img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+      background: white;
+      border-radius: 12px;
+      padding: 8px;
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.85rem;
+      color: #b8a898;
+      margin: 0;
+    }
+  }
+
+  .footer-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .footer-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: #c8b8a8;
+
+      i {
+        color: #d8a03d;
+        font-size: 1rem;
+      }
+
+      strong {
+        color: #ffffff;
+        font-weight: 800;
+      }
+    }
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    .social-link {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid #3d2c2c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c8b8a8;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: #d8a03d;
+        color: #d8a03d;
+      }
+
+      &.social-wa:hover {
+        border-color: #25D366;
+        color: #25D366;
+      }
+
+      &.social-fb:hover {
+        border-color: #1877F2;
+        color: #1877F2;
+      }
+    }
+  }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #5a4030;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-footer .footer-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .footer-details .footer-detail-item {
+      justify-content: center;
+    }
+
+    .footer-social {
+      justify-content: center;
+    }
+
+    .footer-bottom {
+      text-align: center;
+    }
+  }
+}
+
+// =============================================
+// OVERRIDES IA GENERATED (LOGO, BANNER, TEXTURE)
+// =============================================
+
+.sticky-toolbar {
+  /* Toolbar mucho más claro, sin textura para contrastar el logo */
+  background: #e8d8c8e7 !important;
+  border-bottom: 1px solid #e8d8c8 !important;
+  box-shadow: 0 4px 12px rgba(43, 30, 30, 0.05) !important;
+  width: 100%;
+}
+
+.chow-toolbar-custom {
+  /* Distribución fluida de lado a lado */
+  grid-template-columns: auto auto 1fr !important;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 1.5rem !important;
+  padding: 0.5rem 1.5rem !important;
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  height: 55px;
+  /* Ligeramente más grande para que se lea mejor */
+  width: auto;
+  object-fit: contain;
+  /* mix-blend-mode: multiply hace que el fondo blanco del logo desaparezca mágicamente, como un PNG transparente */
+  mix-blend-mode: multiply;
+}
+
+.footer-logo-img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 0.8rem;
+  mix-blend-mode: multiply;
+  filter: brightness(0) invert(1);
+  /* Si el footer es oscuro, invertimos el logo para que sea blanco */
+}
+
+/* El footer es oscuro (#2b1e1e), por lo tanto el logo debe ser blanco, el invert lo logra de inmediato */
+.home-footer .footer-logo-img {
+  filter: grayscale(100%) brightness(0) invert(1);
+  mix-blend-mode: normal;
+}
+
+@media (max-width: 620px) {
+  .chow-toolbar-custom {
+    grid-template-columns: auto auto 1fr !important;
+  }
+
+  .nav-logo {
+    height: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .chow-toolbar-custom {
+    grid-template-columns: auto 1fr !important;
+  }
+
+  .toolbar-brand {
+    justify-content: start;
   }
 }

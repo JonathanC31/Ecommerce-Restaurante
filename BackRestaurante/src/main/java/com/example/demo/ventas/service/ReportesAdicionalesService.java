@@ -3,6 +3,8 @@ package com.example.demo.ventas.service;
 import com.example.demo.inventario.entity.MovimientoInventario;
 import com.example.demo.inventario.entity.TipoMovimientoInventario;
 import com.example.demo.inventario.repository.MovimientoInventarioRepository;
+import com.example.demo.contabilidad.entity.Egreso;
+import com.example.demo.contabilidad.repository.EgresoRepository;
 import com.example.demo.ventas.dto.*;
 import com.example.demo.ventas.entity.Factura;
 import com.example.demo.ventas.entity.Venta;
@@ -21,10 +23,14 @@ public class ReportesAdicionalesService {
 
     private final VentaRepository ventaRepository;
     private final MovimientoInventarioRepository movimientoInventarioRepository;
+    private final EgresoRepository egresoRepository;
 
-    public ReportesAdicionalesService(VentaRepository ventaRepository, MovimientoInventarioRepository movimientoInventarioRepository) {
+    public ReportesAdicionalesService(VentaRepository ventaRepository, 
+                                    MovimientoInventarioRepository movimientoInventarioRepository,
+                                    EgresoRepository egresoRepository) {
         this.ventaRepository = ventaRepository;
         this.movimientoInventarioRepository = movimientoInventarioRepository;
+        this.egresoRepository = egresoRepository;
     }
 
     public List<FacturaReporteResponse> getReporteFacturacion() {
@@ -74,11 +80,14 @@ public class ReportesAdicionalesService {
                 .filter(m -> !m.getFecha().isBefore(inicioMes))
                 .collect(Collectors.toList());
 
-        double egresosMes = movimientosMes.stream()
-                .filter(m -> m.getTipo() == TipoMovimientoInventario.ENTRADA)
-                .mapToDouble(m -> m.getCantidad() * m.getCostoUnitario())
-                .sum();
+        // Obtener egresos del mes desde la tabla de contabilidad
+        List<Egreso> egresosTabla = egresoRepository.findAll().stream()
+                .filter(e -> !e.getFecha().isBefore(inicioMes))
+                .collect(Collectors.toList());
 
+        double egresosMes = egresosTabla.stream().mapToDouble(Egreso::getMonto).sum();
+
+        // Los desperdicios siguen leyéndose del inventario
         double desperdicioValorizado = movimientosMes.stream()
                 .filter(m -> m.getTipo() == TipoMovimientoInventario.DESPERDICIO)
                 .mapToDouble(m -> m.getCantidad() * m.getCostoUnitario())
@@ -103,17 +112,21 @@ public class ReportesAdicionalesService {
             ));
         }
 
-        // Egresos y desperdicios del inventario
+        // Egresos desde la tabla de contabilidad
+        List<Egreso> egresos = egresoRepository.findAll();
+        for (Egreso e : egresos) {
+            movimientos.add(new MovimientoContableResponse(
+                    "EGRESO",
+                    e.getDescripcion(),
+                    e.getMonto(),
+                    e.getFecha()
+            ));
+        }
+
+        // Desperdicios del inventario
         List<MovimientoInventario> movsInventario = movimientoInventarioRepository.findAll();
         for (MovimientoInventario m : movsInventario) {
-            if (m.getTipo() == TipoMovimientoInventario.ENTRADA) {
-                movimientos.add(new MovimientoContableResponse(
-                        "EGRESO",
-                        "Compra de materia prima: " + m.getItem().getNombre(),
-                        m.getCantidad() * m.getCostoUnitario(),
-                        m.getFecha()
-                ));
-            } else if (m.getTipo() == TipoMovimientoInventario.DESPERDICIO) {
+            if (m.getTipo() == TipoMovimientoInventario.DESPERDICIO) {
                 movimientos.add(new MovimientoContableResponse(
                         "PERDIDA",
                         "Desperdicio de materia prima: " + m.getItem().getNombre(),

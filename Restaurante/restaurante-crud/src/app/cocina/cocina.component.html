@@ -1,0 +1,65 @@
+<p-toast></p-toast>
+
+<div class="cocina-container p-4">
+    <div class="header-section mb-5">
+        <div class="header-top">
+            <a routerLink="/reportes" class="back-btn">
+                <i class="pi pi-arrow-left"></i>
+                Panel de Control
+            </a>
+        </div>
+        <div class="text-center">
+            <h1 class="brand-title">COCINA CHOW YINN</h1>
+            <p class="subtitle">Gestión de pedidos en tiempo real</p>
+        </div>
+    </div>
+
+    <div class="grid" *ngIf="pedidos.length > 0; else noPedidos">
+        <div class="col-12 md:col-6 lg:col-4 xl:col-3" *ngFor="let pedido of pedidos; let i = index">
+            <div class="pedido-card">
+                <div class="card-header">
+                    <span class="order-number">ORDEN #{{ pedido.ventaId }}</span>
+                    <span class="order-time">{{ pedido.fecha | date:'shortTime' }}</span>
+                </div>
+
+                <div class="card-content">
+                    <div class="customer-info mb-3">
+                        <i class="pi pi-user mr-2"></i>
+                        <strong>{{ pedido.clienteNombre }}</strong>
+                        <div class="text-xs text-500">{{ pedido.metodoPago }}</div>
+                    </div>
+
+                    <div class="items-list">
+                        <div class="item-entry mb-2 pb-2 border-bottom-1 surface-border" *ngFor="let item of pedido.items">
+                            <div class="flex justify-content-between align-items-start">
+                                <span class="item-name font-bold">{{ item.cantidad }}x {{ item.productoNombre }}</span>
+                            </div>
+                            <div class="item-specs text-orange-600 font-bold mt-1" *ngIf="item.especificaciones">
+                                <i class="pi pi-info-circle mr-1"></i>
+                                {{ item.especificaciones }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer mt-4">
+                    <p-button 
+                        label="PEDIDO ENTREGADO" 
+                        icon="pi pi-check-circle" 
+                        styleClass="w-full btn-done"
+                        (onClick)="marcarEntregado(pedido.ventaId)">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noPedidos>
+        <div class="empty-state text-center py-8">
+            <i class="pi pi-clock mb-4" style="font-size: 4rem; color: #E8D8C8;"></i>
+            <h3>No hay pedidos pendientes</h3>
+            <p class="text-muted">Los nuevos pedidos aparecerán aquí automáticamente.</p>
+        </div>
+    </ng-template>
+</div>
+

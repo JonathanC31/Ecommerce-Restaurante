@@ -37,8 +37,14 @@ public class Venta {
     @Enumerated(EnumType.STRING)
     private EstadoVenta estado;
 
+    @Embedded
+    private DatosEntrega datosEntrega;
+
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleVenta> detalles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pago> pagos = new ArrayList<>();
 
     @OneToOne(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private Factura factura;
@@ -51,5 +57,10 @@ public class Venta {
     public void setFactura(Factura factura) {
         factura.setVenta(this);
         this.factura = factura;
+    }
+
+    public void addPago(Pago pago) {
+        pago.setVenta(this);
+        this.pagos.add(pago);
     }
 }
