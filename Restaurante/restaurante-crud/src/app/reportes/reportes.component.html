@@ -3,6 +3,9 @@
     
     <!-- Topbar -->
     <header class="shell-header">
+      <button class="mobile-menu-btn" (click)="toggleSidebar()">
+        <i class="pi pi-bars"></i>
+      </button>
       <div class="header-brand">
         <div class="brand-icon">
           <i class="pi pi-home"></i>
@@ -21,15 +24,19 @@
     <!-- Content area -->
     <div class="shell-content">
       
+      <!-- Backdrop para móvil -->
+      <div class="sidebar-backdrop" [class.show]="isSidebarOpen" (click)="closeSidebar()"></div>
+
       <!-- Sidebar -->
-      <aside class="shell-sidebar">
+      <aside class="shell-sidebar" [class.open]="isSidebarOpen">
         <p class="sidebar-title">Módulos</p>
         <nav class="sidebar-nav">
           <a *ngFor="let view of views"
              [routerLink]="view.path"
              [routerLinkActiveOptions]="{exact: view.exact}"
              routerLinkActive="active"
-             class="nav-link">
+             class="nav-link"
+             (click)="closeSidebar()">
             <div class="nav-icon">
               <i [class]="view.icon"></i>
             </div>

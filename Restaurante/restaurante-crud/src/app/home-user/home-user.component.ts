@@ -200,13 +200,16 @@ export class HomeUserComponent implements OnInit {
   }
 
   getAllProductos(): void {
+    const hoy = new Date().getDay(); // 0=Dom, 6=Sáb
+    const esFinDeSemana = hoy === 0 || hoy === 6;
     this.productoService.getProdutos().subscribe({
       next: (data) => {
-        this.productos = data;
+        this.productos = esFinDeSemana
+          ? data
+          : data.filter(p => !p.nombre.includes('Fines de semana'));
       },
       error: (error) => {
         console.error('Error cargando productos:', error);
-
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -477,6 +480,41 @@ export class HomeUserComponent implements OnInit {
         });
       }
     });
+  }
+
+  // ── Carrusel: máximo 5 productos, uno por categoría (sin bebidas) ──
+  get productosFavoritos(): Producto[] {
+    const sinBebidas = this.productos.filter(p => p.categoria !== 'Bebidas');
+    const vistos = new Set<string>();
+    const resultado: Producto[] = [];
+    for (const p of sinBebidas) {
+      if (!vistos.has(p.categoria)) {
+        vistos.add(p.categoria);
+        resultado.push(p);
+      }
+      if (resultado.length >= 5) break;
+    }
+    return resultado;
+  }
+
+  // ── Limpia el nombre quitando porciones y nota de fines de semana ──
+  getNombreLimpio(nombre: string): string {
+    return nombre
+      .replace(/\s*\(\d+\s*porciones?\)/gi, '')
+      .replace(/\s*\(1\s*porci[oó]n\)/gi, '')
+      .replace(/\s*\(Fines de semana\)/gi, '')
+      .trim();
+  }
+
+  // ── Extrae el texto de porciones para mostrarlo como tag ──
+  getPorciones(nombre: string): string | null {
+    const match = nombre.match(/\((\d+\s*porciones?|1\s*porci[oó]n)\)/i);
+    return match ? match[1] : null;
+  }
+
+  // ── Indica si el producto es solo para fines de semana ──
+  esProductoFindeSemana(nombre: string): boolean {
+    return nombre.includes('Fines de semana');
   }
 
   trackByIdProducto(index: number, producto: Producto): number {
