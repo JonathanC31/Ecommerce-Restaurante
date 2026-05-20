@@ -102,7 +102,7 @@
 
     <p-carousel
         class="highlights-carousel"
-        [value]="productos"
+        [value]="productosFavoritos"
         [numVisible]="3"
         [numScroll]="1"
         [circular]="true"
@@ -120,11 +120,13 @@
                 </div>
 
                 <div class="highlight-body">
-                    <span class="category-pill">
-                        {{ producto.categoria }}
-                    </span>
+                    <div class="card-tags">
+                        <span class="category-pill">{{ producto.categoria }}</span>
+                        <span class="category-pill weekend-tag" *ngIf="esProductoFindeSemana(producto.nombre)">Solo Fines de Semana</span>
+                        <span class="category-pill portion-tag" *ngIf="getPorciones(producto.nombre)">{{ getPorciones(producto.nombre) }}</span>
+                    </div>
 
-                    <h3>{{ producto.nombre }}</h3>
+                    <h3>{{ getNombreLimpio(producto.nombre) }}</h3>
 
                     <p class="highlight-description">
                         Plato preparado al momento, ideal para compartir o acompañar tu pedido.
@@ -169,11 +171,13 @@
         </div>
 
         <div class="menu-product-body">
-            <span class="category-pill">
-                {{ producto.categoria }}
-            </span>
+            <div class="card-tags">
+                <span class="category-pill">{{ producto.categoria }}</span>
+                <span class="category-pill weekend-tag" *ngIf="esProductoFindeSemana(producto.nombre)">Solo Fines de Semana</span>
+                <span class="category-pill portion-tag" *ngIf="getPorciones(producto.nombre)">{{ getPorciones(producto.nombre) }}</span>
+            </div>
 
-            <h3>{{ producto.nombre }}</h3>
+            <h3>{{ getNombreLimpio(producto.nombre) }}</h3>
 
             <p class="menu-product-description">
                 Producto disponible para agregar a tu pedido.
