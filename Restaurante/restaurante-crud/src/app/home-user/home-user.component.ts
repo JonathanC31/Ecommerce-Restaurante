@@ -22,6 +22,8 @@ import { DividerModule } from 'primeng/divider';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DataViewModule } from 'primeng/dataview';
+import { SkeletonModule } from 'primeng/skeleton';
 
 import { Producto } from '../modelos/producto';
 import { ProductoService } from '../servicios/producto.service';
@@ -71,7 +73,9 @@ interface CategoriaMenu {
     AvatarModule,
     StyleClassModule,
     InputTextModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DataViewModule,
+    SkeletonModule
   ],
   templateUrl: './home-user.component.html',
   styleUrl: './home-user.component.scss'
@@ -80,6 +84,7 @@ export class HomeUserComponent implements OnInit {
 
   productos: Producto[] = [];
   filteredProductos: Producto[] = [];
+  isLoading: boolean = true;
 
   items: MenuItem[] | undefined;
   isDeleteInProgress: boolean = false;
@@ -202,14 +207,17 @@ export class HomeUserComponent implements OnInit {
   getAllProductos(): void {
     const hoy = new Date().getDay(); // 0=Dom, 6=Sáb
     const esFinDeSemana = hoy === 0 || hoy === 6;
+    this.isLoading = true;
     this.productoService.getProdutos().subscribe({
       next: (data) => {
         this.productos = esFinDeSemana
           ? data
           : data.filter(p => !p.nombre.includes('Fines de semana'));
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error cargando productos:', error);
+        this.isLoading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -507,9 +515,9 @@ export class HomeUserComponent implements OnInit {
   }
 
   // ── Extrae el texto de porciones para mostrarlo como tag ──
-  getPorciones(nombre: string): string | null {
+  getPorciones(nombre: string): string | undefined {
     const match = nombre.match(/\((\d+\s*porciones?|1\s*porci[oó]n)\)/i);
-    return match ? match[1] : null;
+    return match ? match[1] : undefined;
   }
 
   // ── Indica si el producto es solo para fines de semana ──

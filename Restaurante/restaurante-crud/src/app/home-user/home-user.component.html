@@ -33,59 +33,51 @@
             </p-button>
         </div>
 
-        <div class="toolbar-search" [formGroup]="productFormGroup">
-            <p-autoComplete
-                formControlName="producto"
-                [dropdown]="true"
-                [showClear]="true"
-                [suggestions]="filteredProductos"
-                (completeMethod)="filterProducto($event)"
-                (onSelect)="onSelectProducto($event)"
-                optionLabel="nombre"
-                placeholder="Buscar productos">
-            </p-autoComplete>
-        </div>
+        <!-- Buscador oculto: La navegación principal ahora es por categorías -->
+        <!-- <div class="toolbar-search" [formGroup]="productFormGroup">...</div> -->
 
     </div>
 </div>
 
 <!-- Hero principal -->
-<section class="hero-section">
-    <div class="hero-content">
-        <p class="eyebrow">CHOW YINN · RESTAURANTE CHINO</p>
+<section class="hero-section flex flex-column md:flex-row align-items-center justify-content-between p-4 md:p-6 gap-5">
+    <div class="hero-content flex-1 text-center md:text-left">
+        <p class="eyebrow mb-2">CHOW YINN · RESTAURANTE CHINO</p>
 
-        <h1>Sabores calientes, frescos y listos para compartir</h1>
+        <h1 class="text-4xl md:text-6xl font-bold mb-3 mt-0 text-gray-900">Sabores calientes, frescos y listos para compartir</h1>
 
-        <p class="hero-description">
+        <p class="hero-description text-xl text-gray-600 mb-5 line-height-3">
             Disfruta arroz chino, carnes, pollo, especiales y bebidas en una experiencia rápida,
             sencilla y pensada para pedir sin complicaciones.
         </p>
 
-        <div class="hero-actions">
+        <div class="hero-actions flex flex-wrap justify-content-center md:justify-content-start gap-3">
             <p-button
                 label="Ver menú"
                 icon="pi pi-list"
-                styleClass="primary-action"
+                styleClass="p-button-lg"
                 (onClick)="sidebarVisible = true">
             </p-button>
 
             <p-button
                 label="Ordenar ahora"
                 icon="pi pi-shopping-cart"
-                styleClass="secondary-action"
+                severity="secondary"
+                styleClass="p-button-lg p-button-outlined"
                 (onClick)="cartVisible = true">
             </p-button>
         </div>
     </div>
 
-    <div class="hero-card">
+    <div class="hero-card flex-1 relative hidden md:block">
         <img
             src="/assets/images/hero-bg.png"
-            alt="Especial Arroz Chino Colombiano Chow Yinn" />
+            alt="Especial Arroz Chino Colombiano Chow Yinn" 
+            class="w-full border-round-3xl shadow-4" />
 
-        <div class="hero-badge">
-            <span>Especial del día</span>
-            <strong>Arroz chino familiar</strong>
+        <div class="hero-badge absolute bottom-0 right-0 mb-4 mr-4 bg-white p-3 border-round-2xl shadow-6 flex flex-column">
+            <span class="text-sm font-semibold text-primary">Especial del día</span>
+            <strong class="text-lg text-gray-900">Arroz chino familiar</strong>
         </div>
     </div>
 </section>
@@ -110,105 +102,105 @@
         autoplayInterval="6000">
 
         <ng-template let-producto pTemplate="item">
-            <article class="highlight-card">
-                <div class="highlight-image">
-                    <img
-                        src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80"
-                        [alt]="producto.nombre" />
+            <div class="p-2">
+                <p-card styleClass="highlight-p-card border-round-2xl overflow-hidden shadow-2 hover:shadow-5 transition-all transition-duration-300 h-full">
+                    <ng-template pTemplate="header">
+                        <div class="highlight-image relative h-15rem overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80"
+                                [alt]="producto.nombre" 
+                                class="w-full h-full object-cover transition-transform transition-duration-500 hover:scale-110" />
+                        </div>
+                    </ng-template>
 
-                    <!-- stock removed -->
-                </div>
-
-                <div class="highlight-body">
-                    <div class="card-tags">
-                        <span class="category-pill">{{ producto.categoria }}</span>
-                        <span class="category-pill weekend-tag" *ngIf="esProductoFindeSemana(producto.nombre)">Solo Fines de Semana</span>
-                        <span class="category-pill portion-tag" *ngIf="getPorciones(producto.nombre)">{{ getPorciones(producto.nombre) }}</span>
+                    <div class="card-tags flex flex-wrap gap-2 mb-3">
+                        <p-tag [value]="producto.categoria" severity="warning" styleClass="text-xs"></p-tag>
+                        <p-tag *ngIf="esProductoFindeSemana(producto.nombre)" value="Solo Fines de Semana" severity="danger" styleClass="text-xs"></p-tag>
+                        <p-tag *ngIf="getPorciones(producto.nombre)" [value]="getPorciones(producto.nombre)" severity="contrast" styleClass="text-xs"></p-tag>
                     </div>
 
-                    <h3>{{ getNombreLimpio(producto.nombre) }}</h3>
+                    <h3 class="m-0 mb-2 text-xl font-bold text-gray-900">{{ getNombreLimpio(producto.nombre) }}</h3>
 
-                    <p class="highlight-description">
+                    <p class="highlight-description text-gray-600 line-height-3 mb-4">
                         Plato preparado al momento, ideal para compartir o acompañar tu pedido.
                     </p>
 
-                    <div class="highlight-footer">
-                        <strong>
+                    <div class="highlight-footer flex justify-content-between align-items-center mt-auto">
+                        <strong class="text-2xl text-primary font-bold">
                             {{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}
                         </strong>
 
-                        <div class="highlight-actions">
+                        <div class="highlight-actions flex gap-2">
                             <p-button
                                 icon="pi pi-eye"
                                 [rounded]="true"
-                                styleClass="view-action"
+                                severity="secondary"
+                                [outlined]="true"
                                 (onClick)="openDialog(producto)">
                             </p-button>
 
                             <p-button
                                 icon="pi pi-cart-plus"
                                 [rounded]="true"
-                                styleClass="cart-action"
                                 (onClick)="addToCart(producto)">
                             </p-button>
                         </div>
                     </div>
-                </div>
-            </article>
+                </p-card>
+            </div>
         </ng-template>
     </p-carousel>
 </section>
 
 <!-- Template reutilizable para productos del menú -->
 <ng-template #menuProductCard let-producto="producto">
-    <article class="menu-product-card">
-        <div class="menu-product-image">
-            <img
-                src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
-                [alt]="producto.nombre" />
+    <p-card styleClass="menu-p-card border-round-2xl overflow-hidden shadow-2 hover:shadow-5 transition-all transition-duration-300 h-full fade-in flex flex-column">
+        <ng-template pTemplate="header">
+            <div class="menu-product-image relative h-12rem overflow-hidden">
+                <img
+                    src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                    [alt]="producto.nombre" 
+                    class="w-full h-full object-cover transition-transform transition-duration-500 hover:scale-110" />
+            </div>
+        </ng-template>
 
-            <!-- stock removed -->
-        </div>
-
-        <div class="menu-product-body">
-            <div class="card-tags">
-                <span class="category-pill">{{ producto.categoria }}</span>
-                <span class="category-pill weekend-tag" *ngIf="esProductoFindeSemana(producto.nombre)">Solo Fines de Semana</span>
-                <span class="category-pill portion-tag" *ngIf="getPorciones(producto.nombre)">{{ getPorciones(producto.nombre) }}</span>
+        <div class="flex flex-column h-full">
+            <div class="card-tags flex flex-wrap gap-2 mb-2">
+                <p-tag [value]="producto.categoria" severity="warning" styleClass="text-xs"></p-tag>
+                <p-tag *ngIf="esProductoFindeSemana(producto.nombre)" value="Fines de Semana" severity="danger" styleClass="text-xs"></p-tag>
+                <p-tag *ngIf="getPorciones(producto.nombre)" [value]="getPorciones(producto.nombre)" severity="contrast" styleClass="text-xs"></p-tag>
             </div>
 
-            <h3>{{ getNombreLimpio(producto.nombre) }}</h3>
+            <h3 class="m-0 mb-2 text-xl font-bold text-gray-900">{{ getNombreLimpio(producto.nombre) }}</h3>
 
-            <p class="menu-product-description">
+            <p class="menu-product-description text-gray-600 line-height-3 mb-3 flex-grow-1">
                 Producto disponible para agregar a tu pedido.
             </p>
 
-            <div class="menu-product-info">
-                <div>
-                    <span>Precio</span>
-                    <strong>{{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</strong>
-                </div>
-
-                <!-- stock removed -->
+            <div class="menu-product-info bg-orange-50 border-round-xl p-3 mb-3 flex justify-content-between align-items-center">
+                <span class="text-sm text-gray-600">Precio</span>
+                <strong class="text-xl text-primary font-bold">{{ producto.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</strong>
             </div>
 
-            <div class="menu-product-actions">
+            <div class="menu-product-actions flex gap-2 mt-auto">
                 <p-button
                     label="Ver más"
                     icon="pi pi-eye"
-                    styleClass="menu-view-button"
+                    severity="secondary"
+                    [outlined]="true"
+                    styleClass="w-full"
                     (onClick)="openDialog(producto)">
                 </p-button>
 
                 <p-button
                     label="Añadir"
                     icon="pi pi-cart-plus"
-                    styleClass="menu-add-button"
+                    styleClass="w-full"
                     (onClick)="addToCart(producto)">
                 </p-button>
             </div>
         </div>
-    </article>
+    </p-card>
 </ng-template>
 
 <!-- Menú por categorías -->
@@ -224,24 +216,49 @@
     @for (categoria of categoriasMenu; track categoria.id) {
         <p-fieldset
             [legend]="categoria.titulo"
-            [attr.id]="categoria.id">
+            [attr.id]="categoria.id"
+            styleClass="mb-5 border-round-2xl surface-0 shadow-1">
 
-            <p class="menu-category-description">
+            <p class="menu-category-description text-lg text-gray-600 mb-4 px-2">
                 {{ categoria.descripcion }}
             </p>
 
-            <div class="menu-grid">
-                @for (producto of productosPorCategoria(categoria.categoriaProducto); track producto.id) {
-                    <ng-container
-                        *ngTemplateOutlet="menuProductCard; context: { producto: producto }">
-                    </ng-container>
-                } @empty {
-                    <div class="empty-category">
-                        <i class="pi pi-info-circle"></i>
-                        <p>No hay productos disponibles en esta categoría.</p>
-                    </div>
-                }
-            </div>
+            @if (isLoading) {
+                <div class="grid">
+                    @for (item of [1, 2, 3]; track item) {
+                        <div class="col-12 md:col-6 lg:col-4 p-2">
+                            <p-card styleClass="border-round-2xl overflow-hidden shadow-2 h-full">
+                                <ng-template pTemplate="header">
+                                    <p-skeleton width="100%" height="12rem"></p-skeleton>
+                                </ng-template>
+                                <p-skeleton width="60%" styleClass="mb-2"></p-skeleton>
+                                <p-skeleton width="80%" styleClass="mb-3"></p-skeleton>
+                                <div class="flex justify-content-between mt-3">
+                                    <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                                    <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                                </div>
+                            </p-card>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <p-dataView [value]="productosPorCategoria(categoria.categoriaProducto)" layout="grid">
+                    <ng-template pTemplate="grid" let-productos>
+                        <div class="grid grid-nogutter">
+                            @for (producto of productos; track producto.id) {
+                                <div class="col-12 md:col-6 lg:col-4 p-2">
+                                    <ng-container *ngTemplateOutlet="menuProductCard; context: { producto: producto }"></ng-container>
+                                </div>
+                            } @empty {
+                                <div class="col-12 p-3 text-center text-gray-500">
+                                    <i class="pi pi-info-circle text-2xl mb-2 block"></i>
+                                    <p>No hay productos disponibles en esta categoría.</p>
+                                </div>
+                            }
+                        </div>
+                    </ng-template>
+                </p-dataView>
+            }
         </p-fieldset>
     }
 </section>
@@ -305,9 +322,10 @@
                                 <li>
                                     <a
                                         pRipple
-                                        href="home-user#{{ categoria.id }}"
+                                        [routerLink]="['/home-user']" 
+                                        [fragment]="categoria.id"
                                         (click)="sidebarVisible = false"
-                                        class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                        class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple no-underline">
                                         <i class="pi pi-minus mr-2"></i>
                                         <span class="font-medium">{{ categoria.titulo }}</span>
                                     </a>

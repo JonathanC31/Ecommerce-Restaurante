@@ -397,55 +397,38 @@
   line-height: 1.6;
 }
 
-.highlight-card {
-  margin: 0.75rem;
-  background: #ffffff;
-  border: 1px solid #e8d8c8;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 10px 28px rgba(43, 30, 30, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* ============================= */
+/* Animaciones y Utilidades */
+/* ============================= */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.highlight-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(43, 30, 30, 0.14);
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.highlight-image {
-  position: relative;
-  height: 230px;
-  overflow: hidden;
-}
-
-.highlight-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.stock-pill,
-.menu-stock-pill {
-  position: absolute;
-  top: 0.85rem;
-  left: 0.85rem;
-  background: #fff8f0;
-  color: #9e1b1b;
-  font-weight: 900;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid #e8d8c8;
-}
-
-.highlight-body {
+:host ::ng-deep .highlight-p-card .p-card-body,
+:host ::ng-deep .menu-p-card .p-card-body {
   padding: 1.25rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:host ::ng-deep .highlight-p-card .p-card-content,
+:host ::ng-deep .menu-p-card .p-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
 }
 
 .card-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 0.8rem;
 }
 
 .category-pill {
@@ -468,62 +451,6 @@
 .portion-tag {
   background: #2b1e1e;
   color: #e8d8c8;
-}
-
-.highlight-body h3 {
-  margin: 0.9rem 0 0.6rem;
-  font-size: 1.35rem;
-  color: #2b1e1e;
-}
-
-.highlight-description {
-  color: #6b5b5b;
-  margin: 0 0 1.2rem;
-  line-height: 1.5;
-}
-
-.highlight-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.highlight-footer strong {
-  color: #9e1b1b;
-  font-size: 1.3rem;
-}
-
-.highlight-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-:host ::ng-deep .view-action,
-:host ::ng-deep .cart-action {
-  width: 3rem;
-  height: 3rem;
-}
-
-:host ::ng-deep .view-action {
-  background: #9e1b1b !important;
-  border-color: #9e1b1b !important;
-  color: #fff !important;
-}
-
-:host ::ng-deep .view-action:hover {
-  background: #6f1212 !important;
-  border-color: #6f1212 !important;
-}
-
-:host ::ng-deep .cart-action {
-  background: #d8a03d !important;
-  border-color: #d8a03d !important;
-  color: #2b1e1e !important;
-}
-
-:host ::ng-deep .cart-action:hover {
-  background: #c58d29 !important;
-  border-color: #c58d29 !important;
 }
 
 /* ============================= */
@@ -550,6 +477,11 @@
   color: #6b5b5b;
   margin: 0.5rem 0 1.4rem;
   font-size: 1rem;
+}
+
+:host ::ng-deep .p-dataview .p-dataview-content {
+  background: transparent;
+  padding: 0;
 }
 
 .menu-grid {
@@ -608,59 +540,6 @@
   margin-bottom: 1.2rem;
 }
 
-.menu-product-info div {
-  background: #fff8f0;
-  border: 1px solid #e8d8c8;
-  border-radius: 1rem;
-  padding: 0.75rem;
-}
-
-.menu-product-info span {
-  display: block;
-  color: #6b5b5b;
-  font-size: 0.8rem;
-  margin-bottom: 0.25rem;
-}
-
-.menu-product-info strong {
-  color: #9e1b1b;
-  font-size: 1rem;
-}
-
-.menu-product-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-:host ::ng-deep .menu-view-button,
-:host ::ng-deep .menu-add-button {
-  border-radius: 999px !important;
-  font-weight: 800;
-}
-
-:host ::ng-deep .menu-view-button {
-  background: #fff !important;
-  border: 1px solid #9e1b1b !important;
-  color: #9e1b1b !important;
-}
-
-:host ::ng-deep .menu-add-button {
-  background: #9e1b1b !important;
-  border-color: #9e1b1b !important;
-  color: #fff !important;
-}
-
-.empty-category {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #6b5b5b;
-  background: #fff8f0;
-  border: 1px dashed #e8d8c8;
-  border-radius: 1rem;
-  padding: 1rem;
-}
 
 /* ============================= */
 /* Botón flotante carrito */
