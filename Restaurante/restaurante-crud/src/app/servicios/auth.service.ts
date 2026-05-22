@@ -8,6 +8,7 @@ interface AuthResponse {
   token: string;
   tokenType: string;
   expiresIn: number;
+  nombre?: string;
 }
 
 @Injectable({
@@ -30,6 +31,9 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem('token', response.token);
+          if (response.nombre) {
+            localStorage.setItem('nombre', response.nombre);
+          }
         })
       );
   }
@@ -49,12 +53,16 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem('token', response.token);
+          if (response.nombre) {
+            localStorage.setItem('nombre', response.nombre);
+          }
         })
       );
   }
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('nombre');
   }
 
   getToken(): string | null {

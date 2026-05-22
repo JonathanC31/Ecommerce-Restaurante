@@ -52,7 +52,8 @@ public class AuthService {
         return new AuthResponse(
                 token,
                 "Bearer",
-                jwtService.getExpirationMs()
+                jwtService.getExpirationMs(),
+                user.getNombre()
         );
     }
 
@@ -82,7 +83,8 @@ public class AuthService {
         return new AuthResponse(
                 token,
                 "Bearer",
-                jwtService.getExpirationMs()
+                jwtService.getExpirationMs(),
+                savedUser.getNombre()
         );
     }
 }

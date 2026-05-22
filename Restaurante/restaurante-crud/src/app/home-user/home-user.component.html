@@ -38,6 +38,14 @@
             </p-button>
 
             <p-button
+                *ngIf="authService.isAdmin()"
+                label="Panel Admin"
+                icon="pi pi-cog"
+                routerLink="/home"
+                styleClass="toolbar-button toolbar-session-button">
+            </p-button>
+
+            <p-button
                 *ngIf="authService.isAuthenticated()"
                 label="Salir"
                 icon="pi pi-sign-out"
@@ -367,6 +375,7 @@
                         <ul class="list-none p-0 m-0 overflow-hidden">
                             <li>
                                 <a
+                                    (click)="scrollToCategory('Especiales'); sidebarVisible = false"
                                     pRipple
                                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                     <i class="pi pi-star-fill mr-2"></i>
@@ -376,6 +385,7 @@
 
                             <li>
                                 <a
+                                    (click)="scrollToCategory('Especiales'); sidebarVisible = false"
                                     pRipple
                                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                     <i class="pi pi-minus mr-2"></i>
@@ -385,6 +395,7 @@
 
                             <li>
                                 <a
+                                    (click)="scrollToCategory('Especiales'); sidebarVisible = false"
                                     pRipple
                                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                     <i class="pi pi-minus mr-2"></i>
@@ -787,7 +798,7 @@
             <span class="text-600 font-medium text-sm">O</span>
         </p-divider>
 
-        <a href="http://localhost:8080/oauth2/authorization/google" class="p-button p-component p-button-outlined w-full flex justify-content-center align-items-center gap-2 no-underline">
+        <a [href]="googleLoginUrl" class="p-button p-component p-button-outlined w-full flex justify-content-center align-items-center gap-2 no-underline">
             <i class="pi pi-google"></i>
             <span class="p-button-label">Continuar con Google</span>
         </a>

@@ -32,6 +32,7 @@ import { VentaService } from '../servicios/venta.service';
 import { CartService, CartItem } from '../servicios/cart.service';
 import { CrearVentaRequest, FacturaResponse } from '../modelos/venta';
 import { ToastModule } from 'primeng/toast';
+import { environment } from '../../environments/environment';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -105,6 +106,7 @@ export class HomeUserComponent implements OnInit {
   loginUsername = '';
   loginPassword = '';
   loginLoading: boolean = false;
+  googleLoginUrl: string = environment.apiUrl.replace('/api', '') + '/oauth2/authorization/google';
 
   checkoutStep: 'CART' | 'SHIPPING' | 'PAYMENT' | 'PROCESSING' = 'CART';
   currentVentaId: number | null = null;
@@ -316,7 +318,7 @@ export class HomeUserComponent implements OnInit {
     
     const fValues = this.checkoutFormGroup.value;
     const request: CrearVentaRequest = {
-      clienteNombre: 'Consumidor final',
+      clienteNombre: localStorage.getItem('nombre') || 'Consumidor final',
       clienteEmail: '',
       clienteTelefono: fValues.telefonoContacto || '',
       clienteDireccion: fValues.direccionEntrega || '',

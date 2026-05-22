@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -9,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { FieldsetModule } from 'primeng/fieldset';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
 
   username = '';
   password = '';
+  googleLoginUrl: string = environment.apiUrl.replace('/api', '') + '/oauth2/authorization/google';
 
   constructor(
     private authService: AuthService,
