@@ -60,6 +60,36 @@
           ></p-inputNumber>
         </div>
 
+        <div class="form-group form-group-full">
+          <label for="imagen">Imagen del producto</label>
+          <div class="image-upload-wrapper">
+            <input
+              id="imagen"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              class="hidden-file-input"
+              #fileInput
+            />
+            
+            <div class="image-upload-zone" (click)="fileInput.click()">
+              <div *ngIf="!imagePreviewUrl" class="upload-placeholder">
+                <i class="pi pi-image text-4xl mb-2"></i>
+                <span>Haz clic para seleccionar una foto</span>
+                <span class="text-xs text-gray-500">(PNG, JPG o WEBP)</span>
+              </div>
+              
+              <div *ngIf="imagePreviewUrl" class="image-preview-container">
+                <img [src]="imagePreviewUrl" alt="Vista previa del plato" class="image-preview" />
+                <div class="change-image-overlay">
+                  <i class="pi pi-camera text-2xl mb-1"></i>
+                  <span>Cambiar imagen</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="actions">

@@ -5,13 +5,17 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { BadgeModule } from 'primeng/badge';
+import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 import { ProductoVendidoReporte, VentaReporte } from '../../modelos/reporte-venta';
+import { FacturaResponse } from '../../modelos/venta';
 import { ReporteService } from '../../servicios/reporte.service';
+import { VentaService } from '../../servicios/venta.service';
 
 @Component({
   selector: 'app-reportes-ventas',
   standalone: true,
-  imports: [CommonModule, CardModule, TableModule, ButtonModule, TagModule, BadgeModule],
+  imports: [CommonModule, CardModule, TableModule, ButtonModule, TagModule, BadgeModule, DialogModule, DividerModule],
   templateUrl: './reportes-ventas.component.html',
   styleUrls: ['./reportes-ventas.component.scss']
 })
@@ -24,8 +28,11 @@ export class ReportesVentasComponent implements OnInit {
  
   ventasRecientes: VentaReporte[] = [];
   productosMasVendidos: ProductoVendidoReporte[] = [];
+
+  isFacturaVisible: boolean = false;
+  facturaSeleccionada: FacturaResponse | null = null;
  
-  constructor(private reporteService: ReporteService) {}
+  constructor(private reporteService: ReporteService, private ventaService: VentaService) {}
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -62,10 +69,20 @@ export class ReportesVentasComponent implements OnInit {
     return 'info';
   }
  
-  verFactura(factura: string): void {
-    // TODO: conectar con el backend cuando esté disponible el PDF/modal de la factura
-    console.log('Ver factura:', factura);
-    alert(`Abriendo factura ${factura}`);
+  verFactura(numeroFactura: string): void {
+    // Necesitamos el ID de la venta, la tabla VentaReporte lo tiene?
+    const venta = this.ventasRecientes.find(v => v.numeroFactura === numeroFactura);
+    if (venta && venta.ventaId) {
+      this.ventaService.obtenerFactura(venta.ventaId).subscribe({
+        next: (factura) => {
+          this.facturaSeleccionada = factura;
+          this.isFacturaVisible = true;
+        },
+        error: (err) => console.error('Error al cargar la factura', err)
+      });
+    } else {
+      console.warn('No se encontró el ID de la venta para la factura', numeroFactura);
+    }
   }
  
   formatCOP(value: number): string {

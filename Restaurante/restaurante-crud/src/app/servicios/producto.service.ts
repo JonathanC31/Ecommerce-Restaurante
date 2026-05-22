@@ -32,5 +32,9 @@ export class ProductoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-
+  uploadImagen(id: number, file: File): Observable<Producto> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Producto>(`${this.apiUrl}/${id}/imagen`, formData);
+  }
 }

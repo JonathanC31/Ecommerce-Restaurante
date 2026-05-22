@@ -28,4 +28,7 @@ public class Producto {
     @Column(name="precioUnitario")
     private double precioUnitario;
 
+    @Column(name="imagen_url")
+    private String imagenUrl;
+
 }

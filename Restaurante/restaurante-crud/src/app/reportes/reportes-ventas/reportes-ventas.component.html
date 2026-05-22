@@ -173,3 +173,106 @@
   </div>
  
 </div>
+
+<!-- Diálogo factura (Copia del diseño del cliente) -->
+<p-dialog
+  header="Factura"
+  [(visible)]="isFacturaVisible"
+  [modal]="true"
+  [style]="{ width: '400px', 'max-width': '95vw' }"
+  [closable]="true"
+  class="custom-dialog invoice-dialog">
+
+  <ng-container *ngIf="facturaSeleccionada">
+    <div class="invoice-container">
+      <div class="invoice-header text-center mb-4">
+        <i class="pi pi-check-circle text-green-500 text-5xl mb-2"></i>
+        <h2 class="m-0 text-xl text-gray-900">Factura de venta</h2>
+        <p class="text-sm text-gray-500 mt-1">Chow Yinn Restaurante</p>
+        
+        <div class="mt-2">
+          <p-tag
+            [value]="facturaSeleccionada.estado"
+            [severity]="facturaSeleccionada.estado === 'PAGADA' ? 'success' : (facturaSeleccionada.estado === 'RECHAZADA' ? 'danger' : 'warning')">
+          </p-tag>
+        </div>
+      </div>
+
+      <div class="invoice-details mb-4 p-3 bg-gray-50 border-round-xl">
+        <div class="flex justify-content-between mb-2">
+          <span class="text-gray-600 text-sm">Número de factura</span>
+          <strong class="text-gray-900 text-sm">{{ facturaSeleccionada.numeroFactura }}</strong>
+        </div>
+        
+        <div class="flex justify-content-between mb-2">
+          <span class="text-gray-600 text-sm">Fecha</span>
+          <strong class="text-gray-900 text-sm">{{ facturaSeleccionada.fecha | date:'short' }}</strong>
+        </div>
+
+        <p-divider styleClass="my-2"></p-divider>
+
+        <div class="flex flex-column mb-2">
+          <span class="text-gray-600 text-sm mb-1">Cliente</span>
+          <strong class="text-gray-900">{{ facturaSeleccionada.clienteNombre }}</strong>
+        </div>
+
+        <div class="flex flex-column">
+          <span class="text-gray-600 text-sm mb-1">Método de pago</span>
+          <strong class="text-gray-900">{{ facturaSeleccionada.metodoPago }}</strong>
+        </div>
+      </div>
+
+      <div class="invoice-items mb-4">
+        <h3 class="text-base text-gray-900 mb-3 border-bottom-1 border-gray-200 pb-2">Detalle de la compra</h3>
+        
+        <div class="flex justify-content-between mb-2 align-items-center" *ngFor="let item of facturaSeleccionada.items">
+          <div class="flex flex-column">
+            <span class="text-sm font-medium text-gray-900">{{ item.productoNombre }}</span>
+            <span class="text-xs text-gray-500">{{ item.cantidad }}x {{ item.precioUnitario | currency:'COP':'symbol':'1.0-0' }}</span>
+          </div>
+          <strong class="text-sm text-gray-900">{{ item.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <div class="invoice-summary border-top-1 border-gray-300 pt-3">
+        <div class="flex justify-content-between mb-2">
+          <span class="text-gray-600 text-sm">Subtotal</span>
+          <strong class="text-gray-900 text-sm">{{ facturaSeleccionada.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+
+        <div class="flex justify-content-between mb-2">
+          <span class="text-gray-600 text-sm">IVA</span>
+          <strong class="text-gray-900 text-sm">{{ facturaSeleccionada.iva | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+
+        <div class="flex justify-content-between mt-3 pt-2 border-top-1 border-dashed border-gray-300">
+          <span class="font-bold text-gray-900">Total pagado</span>
+          <strong class="text-xl text-primary font-bold">{{ facturaSeleccionada.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <div class="text-center mt-4 text-xs text-gray-500 bg-orange-50 p-3 border-round-xl">
+        <i class="pi pi-info-circle mr-1"></i>
+        <span>Copia administrativa - Chow Yinn</span>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <p-button
+          label="Cerrar"
+          icon="pi pi-times"
+          styleClass="p-button-outlined w-full"
+          (onClick)="isFacturaVisible = false"
+        ></p-button>
+
+        <button
+          type="button"
+          class="p-button p-component w-full flex justify-content-center"
+          onclick="window.print()"
+        >
+          <span class="p-button-icon p-button-icon-left pi pi-print"></span>
+          <span class="p-button-label">Imprimir</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</p-dialog>

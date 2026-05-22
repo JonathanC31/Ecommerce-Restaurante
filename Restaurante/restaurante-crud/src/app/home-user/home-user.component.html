@@ -38,6 +38,14 @@
             </p-button>
 
             <p-button
+                *ngIf="authService.isAdmin()"
+                label="Panel Admin"
+                icon="pi pi-cog"
+                routerLink="/home"
+                styleClass="toolbar-button toolbar-session-button">
+            </p-button>
+
+            <p-button
                 *ngIf="authService.isAuthenticated()"
                 label="Salir"
                 icon="pi pi-sign-out"
@@ -124,7 +132,7 @@
                     <ng-template pTemplate="header">
                         <div class="highlight-image relative h-15rem overflow-hidden">
                             <img
-                                src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80"
+                                [src]="producto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                                 [alt]="producto.nombre" 
                                 class="w-full h-full object-cover transition-transform transition-duration-500 hover:scale-110" />
                         </div>
@@ -175,7 +183,7 @@
         <ng-template pTemplate="header">
             <div class="menu-product-image relative h-12rem overflow-hidden">
                 <img
-                    src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                    [src]="producto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                     [alt]="producto.nombre" 
                     class="w-full h-full object-cover transition-transform transition-duration-500 hover:scale-110" />
             </div>
@@ -367,6 +375,7 @@
                         <ul class="list-none p-0 m-0 overflow-hidden">
                             <li>
                                 <a
+                                    (click)="scrollToCategory('Especiales'); sidebarVisible = false"
                                     pRipple
                                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                     <i class="pi pi-star-fill mr-2"></i>
@@ -376,6 +385,7 @@
 
                             <li>
                                 <a
+                                    (click)="scrollToCategory('Especiales'); sidebarVisible = false"
                                     pRipple
                                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                     <i class="pi pi-minus mr-2"></i>
@@ -385,6 +395,7 @@
 
                             <li>
                                 <a
+                                    (click)="scrollToCategory('Especiales'); sidebarVisible = false"
                                     pRipple
                                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                     <i class="pi pi-minus mr-2"></i>
@@ -423,7 +434,7 @@
         <div *ngIf="carrito.length > 0; else emptyCart">
         <div *ngFor="let item of carrito" class="cart-item">
             <img
-                src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                [src]="item.producto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                 [alt]="item.producto.nombre"
                 class="cart-img" />
 
@@ -576,7 +587,7 @@
         <div class="grid">
             <div class="col-12 lg:col-6 text-center">
                 <img
-                    src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                    [src]="selectedProducto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                     class="w-8rem sm:w-15rem lg:w-20rem"
                     [alt]="selectedProducto.nombre" />
             </div>
@@ -787,7 +798,7 @@
             <span class="text-600 font-medium text-sm">O</span>
         </p-divider>
 
-        <a href="http://localhost:8080/oauth2/authorization/google" class="p-button p-component p-button-outlined w-full flex justify-content-center align-items-center gap-2 no-underline">
+        <a [href]="googleLoginUrl" class="p-button p-component p-button-outlined w-full flex justify-content-center align-items-center gap-2 no-underline">
             <i class="pi pi-google"></i>
             <span class="p-button-label">Continuar con Google</span>
         </a>

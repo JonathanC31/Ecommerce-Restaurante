@@ -33,3 +33,7 @@ build/
 .vscode/
 
 .gemini/settings.json
+
+### Secrets ###
+credentials.json
+*.env
