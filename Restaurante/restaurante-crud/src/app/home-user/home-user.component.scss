@@ -113,17 +113,22 @@
 }
 
 .chow-toolbar-custom {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
+  display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
   gap: 1.5rem;
   padding: 0.5rem 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.toolbar-actions-left {
+.toolbar-brand .nav-logo {
+  height: 60px;
+  width: auto;
+  transition: all 0.2s ease;
+}
+
+.toolbar-actions-right {
   display: flex;
   align-items: center;
   gap: 0.65rem;
@@ -210,29 +215,24 @@
 /* Responsive móvil */
 @media (max-width: 620px) {
   .chow-toolbar-custom {
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    gap: 0.8rem;
-    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
   }
 
-  .toolbar-brand {
-    grid-column: 1 / 2;
-  }
-  
-  .nav-logo {
-    height: 40px;
-  }
-
-  .toolbar-actions-left {
-    grid-column: 2 / 3;
-    justify-content: flex-end;
+  .toolbar-brand .nav-logo {
+    height: 45px;
   }
 
   .toolbar-search {
-    grid-column: 1 / -1;
-    max-width: none;
-    width: 100%;
+    flex: 1;
+    min-width: 100px;
+  }
+
+  /* Reducir altura de la imagen del carrusel para móviles */
+  .highlight-image {
+    height: 10rem !important;
   }
 
   :host ::ng-deep .toolbar-button {
@@ -1544,10 +1544,16 @@
 }
 
 .nav-logo {
-  height: 55px;
+  height: 60px;
   width: auto;
   object-fit: contain;
   mix-blend-mode: multiply;
+  transition: all 0.2s ease;
+}
+
+.home-footer a, .home-footer .social-link i {
+  color: inherit !important;
+  text-decoration: none !important;
 }
 
 .footer-logo-img {

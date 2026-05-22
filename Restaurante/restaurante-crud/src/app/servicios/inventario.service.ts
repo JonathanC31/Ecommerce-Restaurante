@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { 
   InventarioItemRequest, 
@@ -13,7 +14,7 @@ import {
   providedIn: 'root'
 })
 export class InventarioService {
-  private apiUrl = 'http://localhost:8080/api/inventario';
+  private apiUrl = `${environment.apiUrl}/inventario`;
 
   constructor(private http: HttpClient) { }
 

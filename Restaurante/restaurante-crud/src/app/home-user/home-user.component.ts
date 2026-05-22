@@ -409,6 +409,23 @@ export class HomeUserComponent implements OnInit {
     );
   }
 
+  scrollToCategory(id: string): void {
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        // Obtenemos la altura del toolbar fijo para que no cubra el título
+        const headerOffset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  }
+
   onSelectProducto(event: any): void {
     const producto: Producto = event.value;
 

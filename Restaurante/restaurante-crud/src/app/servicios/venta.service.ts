@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { CrearVentaRequest, FacturaResponse } from '../modelos/venta';
 import { Observable } from 'rxjs';
 
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class VentaService {
 
-  private apiUrl = 'http://localhost:8080/api/ventas';
+  private apiUrl = `${environment.apiUrl}/ventas`;
 
   constructor(private http: HttpClient) {}
 
@@ -25,10 +26,10 @@ export class VentaService {
   }
 
   getPedidosCocina(): Observable<FacturaResponse[]> {
-    return this.http.get<FacturaResponse[]>(`http://localhost:8080/api/cocina/pedidos`);
+    return this.http.get<FacturaResponse[]>(`${environment.apiUrl}/cocina/pedidos`);
   }
 
   marcarPedidoEntregado(ventaId: number): Observable<FacturaResponse> {
-    return this.http.put<FacturaResponse>(`http://localhost:8080/api/cocina/pedidos/${ventaId}/entregado`, {});
+    return this.http.put<FacturaResponse>(`${environment.apiUrl}/cocina/pedidos/${ventaId}/entregado`, {});
   }
 }
