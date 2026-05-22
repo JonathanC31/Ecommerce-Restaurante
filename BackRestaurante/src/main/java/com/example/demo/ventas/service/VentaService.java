@@ -163,7 +163,27 @@ public class VentaService {
         Venta venta = ventaRepository.findById(ventaId)
                 .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
 
+        validarAccesoVenta(venta);
+
         return mapFacturaResponse(venta);
+    }
+
+    private void validarAccesoVenta(Venta venta) {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth == null || !auth.isAuthenticated() || auth instanceof org.springframework.security.authentication.AnonymousAuthenticationToken) {
+            throw new org.springframework.security.access.AccessDeniedException("Acceso denegado: Debe iniciar sesión para ver los detalles de su pedido");
+        }
+        
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                
+        if (!isAdmin) {
+            String userEmail = auth.getName();
+            if (venta.getClienteEmail() == null || !venta.getClienteEmail().equalsIgnoreCase(userEmail)) {
+                throw new org.springframework.security.access.AccessDeniedException("Acceso denegado: No tiene permisos para acceder a esta factura");
+            }
+        }
     }
 
     @Transactional

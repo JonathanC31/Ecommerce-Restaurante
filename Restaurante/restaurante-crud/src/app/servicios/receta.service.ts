@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { RecetaItem } from '../modelos/receta';
 
@@ -7,7 +8,7 @@ import { RecetaItem } from '../modelos/receta';
   providedIn: 'root'
 })
 export class RecetaService {
-  private apiUrl = 'http://localhost:8080/api/recetas';
+  private apiUrl = `${environment.apiUrl}/recetas`;
 
   constructor(private http: HttpClient) {}
 

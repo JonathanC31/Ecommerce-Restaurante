@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { ProductoVendidoReporte, ResumenVentas, VentaReporte } from '../modelos/reporte-venta';
 import { FacturaReporteResponse, ResumenFacturacionResponse } from '../modelos/reporte-facturacion';
 import { MovimientoContableResponse, ResumenContabilidadResponse } from '../modelos/reporte-contabilidad';
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class ReporteService {
 
-  private apiUrl = 'http://localhost:8080/api/reportes';
+  private apiUrl = `${environment.apiUrl}/reportes`;
 
   constructor(private http: HttpClient) {}
 
