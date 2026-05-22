@@ -124,7 +124,7 @@
                     <ng-template pTemplate="header">
                         <div class="highlight-image relative h-15rem overflow-hidden">
                             <img
-                                src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=80"
+                                [src]="producto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                                 [alt]="producto.nombre" 
                                 class="w-full h-full object-cover transition-transform transition-duration-500 hover:scale-110" />
                         </div>
@@ -175,7 +175,7 @@
         <ng-template pTemplate="header">
             <div class="menu-product-image relative h-12rem overflow-hidden">
                 <img
-                    src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                    [src]="producto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                     [alt]="producto.nombre" 
                     class="w-full h-full object-cover transition-transform transition-duration-500 hover:scale-110" />
             </div>
@@ -423,7 +423,7 @@
         <div *ngIf="carrito.length > 0; else emptyCart">
         <div *ngFor="let item of carrito" class="cart-item">
             <img
-                src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                [src]="item.producto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                 [alt]="item.producto.nombre"
                 class="cart-img" />
 
@@ -576,7 +576,7 @@
         <div class="grid">
             <div class="col-12 lg:col-6 text-center">
                 <img
-                    src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+                    [src]="selectedProducto.imagenUrl || 'https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
                     class="w-8rem sm:w-15rem lg:w-20rem"
                     [alt]="selectedProducto.nombre" />
             </div>

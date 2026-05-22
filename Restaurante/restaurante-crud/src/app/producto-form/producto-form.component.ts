@@ -32,6 +32,8 @@ export class ProductoFormComponent {
   formProducto!: FormGroup;
   isSaveInProgress: boolean = false;
   edit: boolean = false;
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
   
   constructor(
     private fb: FormBuilder,
@@ -44,7 +46,8 @@ export class ProductoFormComponent {
       id: [null],
       nombre: ['', Validators.required],
       categoria: ['', Validators.required],
-      precioUnitario: [1, [Validators.required, Validators.min(1)]]
+      precioUnitario: [1, [Validators.required, Validators.min(1)]],
+      imagenUrl: [null]
     });
 
   }
@@ -59,7 +62,10 @@ export class ProductoFormComponent {
   getProductoById(id: number) {
     this.productoService.getProductoById(id).subscribe({
       next: foundProducto => {
-        this.formProducto.patchValue(foundProducto)
+        this.formProducto.patchValue(foundProducto);
+        if (foundProducto.imagenUrl) {
+          this.imagePreviewUrl = foundProducto.imagenUrl;
+        }
       },
       error: () => {
         this.messageService.add({
@@ -70,6 +76,18 @@ export class ProductoFormComponent {
         this.router.navigateByUrl('/home')
       }
     })
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   }
   createProducto() {
     if (this.formProducto.invalid) {
@@ -82,14 +100,13 @@ export class ProductoFormComponent {
     }
     this.isSaveInProgress = true
     this.productoService.createProducto(this.formProducto.value).subscribe({
-      next: () => {
+      next: (createdProducto) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Guardado',
           detail: 'Guardado Correctamente'
         });
-        this.isSaveInProgress = false
-        this.router.navigateByUrl('/home')
+        this.uploadImageAndNavigate(createdProducto.id!);
       },
       error: () => {
         this.isSaveInProgress = false
@@ -120,8 +137,8 @@ export class ProductoFormComponent {
           summary: 'Guardado',
           detail: 'Guardado Correctamente'
         });
-        this.isSaveInProgress = false
-        this.router.navigateByUrl('/home')
+        const id = this.formProducto.get('id')?.value;
+        this.uploadImageAndNavigate(id);
       },
       error: () => {
         this.isSaveInProgress = false
@@ -135,4 +152,31 @@ export class ProductoFormComponent {
     })
   }
 
+  uploadImageAndNavigate(productoId: number) {
+    if (this.selectedFile) {
+      this.productoService.uploadImagen(productoId, this.selectedFile).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Imagen Guardada',
+            detail: 'La imagen del producto se subió correctamente'
+          });
+          this.isSaveInProgress = false;
+          this.router.navigateByUrl('/home');
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error de Imagen',
+            detail: 'El producto se guardó, pero hubo un error al subir la imagen'
+          });
+          this.isSaveInProgress = false;
+          this.router.navigateByUrl('/home');
+        }
+      });
+    } else {
+      this.isSaveInProgress = false;
+      this.router.navigateByUrl('/home');
+    }
+  }
 }

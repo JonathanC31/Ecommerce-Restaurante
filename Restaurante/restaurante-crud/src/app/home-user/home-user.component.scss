@@ -2,6 +2,15 @@
   display: block;
   background: #fff8f0;
   color: #2b1e1e;
+
+  /* Rediseño de variables primarias de Lara Light Blue a Carmesí de la casa */
+  --primary-color: #9e1b1b !important;
+  --primary-color-text: #ffffff !important;
+  --primary-300: #ff8a8a !important;
+  --primary-400: #e55c5c !important;
+  --primary-500: #9e1b1b !important;
+  --primary-600: #7d1515 !important;
+  --primary-700: #5c0f0f !important;
 }
 
 /* ============================= */
@@ -105,10 +114,10 @@
   position: sticky;
   top: 0;
   z-index: 900;
-  background: #e8d8c8e7;
+  background: #2b1e1ee7;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e8d8c8;
-  box-shadow: 0 4px 12px rgba(43, 30, 30, 0.05);
+  border-bottom: 1px solid #3d2b2b;
+  box-shadow: 0 4px 12px rgba(43, 30, 30, 0.15);
   width: 100%;
 }
 
@@ -1568,4 +1577,62 @@
 .home-footer .footer-logo-img {
   filter: grayscale(100%) brightness(0) invert(1);
   mix-blend-mode: normal;
+}
+
+/* ========================================================================== */
+/* PrimeNG overrides to replace Lara Light Blue with Brand Crimson/Gold      */
+/* ========================================================================== */
+:host ::ng-deep {
+  /* Override default text-primary to be Crimson */
+  .text-primary {
+    color: #9e1b1b !important;
+  }
+
+  /* Override standard PrimeNG buttons to brand Crimson */
+  .p-button:not(.p-button-secondary):not(.p-button-danger):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-help) {
+    background: #9e1b1b !important;
+    border-color: #9e1b1b !important;
+    color: #ffffff !important;
+    
+    &:hover {
+      background: #7d1515 !important;
+      border-color: #7d1515 !important;
+      color: #ffffff !important;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(158, 27, 27, 0.4) !important;
+    }
+  }
+
+  /* Outlined buttons */
+  .p-button.p-button-outlined:not(.p-button-secondary):not(.p-button-danger):not(.p-button-success):not(.p-button-info):not(.p-button-warning):not(.p-button-help) {
+    background: transparent !important;
+    color: #9e1b1b !important;
+    border-color: #9e1b1b !important;
+    
+    &:hover {
+      background: rgba(158, 27, 27, 0.05) !important;
+      color: #9e1b1b !important;
+      border-color: #9e1b1b !important;
+    }
+  }
+
+  /* Input number quantity buttons in cart */
+  .p-inputnumber-button {
+    background: #9e1b1b !important;
+    border-color: #9e1b1b !important;
+    color: #ffffff !important;
+    
+    &:hover {
+      background: #7d1515 !important;
+      border-color: #7d1515 !important;
+      color: #ffffff !important;
+    }
+  }
+
+  /* Toast close buttons and layout adjustments if needed */
+  .p-toast .p-toast-message {
+    border-left: 6px solid #9e1b1b !important;
+  }
 }
